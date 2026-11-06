@@ -1,0 +1,232 @@
+# Dual-arm bimanual profile for an operator standing IN FRONT of the arms.
+#
+# STATUS: the 0.45 profile tracks cleanly and its swapped controller assignment,
+# lateral/vertical motion, and rotations are operator-accepted. The 2026-08-14
+# re-test supersedes the earlier all-direction claim: front/back currently has
+# the wrong sign. Do not use this profile for another physical test until a
+# corrected candidate passes MuJoCo. Explicit current authorization, the dual
+# live token, and all safety gates still apply.
+#
+# This profile does not replace configs/dual_widowxai.yaml. That file is the
+# operator's working Behind/Parallel setup and stays untouched.
+#
+# What "Mirrored" actually is here
+# --------------------------------
+# The name says reflection, but end to end this mode is a proper rotation and
+# preserves handedness. Three stages compose:
+#
+#   1. transport `_mirror_webxr_pose` reflects the controller pose across the
+#      operator's sagittal plane: diag(-1, 1, 1) on position, the matching
+#      conjugation on orientation. Determinant -1.
+#   2. the mirror calibration's task frame is exactly the Behind frame
+#      post-multiplied by that same reflection
+#      (`F_mirror = F_behind @ diag(-1, 1, 1)`, verified numerically for both
+#      hands), so stage 2 cancels stage 1 and restores the Behind mapping.
+#   3. `task_position_signs` [-1, -1, 1] and `task_rotation_signs` [-1, 1, -1]
+#      then apply the operator's own convention on top.
+#
+# The surviving transform is therefore diag(-1, -1, 1) about the arm's vertical
+# axis: a 180-degree yaw, determinant +1. Left/right and forward/back reverse,
+# up/down does not. That is precisely the correction for an operator who has
+# walked around to the far side of the table, and `ClutchPoseMapper.engage`
+# already removes room heading via the locked head yaw, so the mode is a pure
+# convention rather than a function of where the operator physically stands.
+#
+# Why both arms may mirror
+# ------------------------
+# configs/dual_widowxai.yaml says mirroring "is deliberately NOT applied
+# globally across both arms". That is accurate about a GLOBAL scene mirror and
+# does not forbid this profile. `mapping_mode` is a per-hand input convention:
+# it is applied inside `_parse_bimanual_controller` on one controller block at
+# a time, and it never reaches `base_transform`, the combined MuJoCo scene, or
+# `DualArmCollisionModel`, which screen commanded joint angles only. Because
+# the surviving transform is a proper rotation, applying it to both hands does
+# not invert left/right handedness and cannot make cross-arm collision
+# reasoning wrong. Both arms mirroring is sound.
+#
+# One honest caveat: the position convention is a yaw about the vertical axis
+# while the rotation convention diag(-1, 1, -1) is a half turn about a
+# horizontal axis. The two are not the same rigid frame change. This is the
+# operator's hand-tuned Mirrored feel, accepted on hardware for the right
+# controller at 50% single-arm scale and the left controller at 45% dual-arm
+# scale. It is applied identically to both hands and introduces no left/right
+# asymmetry. It remains an intentional operator convention rather than one
+# rigid-frame change.
+#
+# Controller-to-arm assignment is SWAPPED relative to the Behind profile
+# ---------------------------------------------------------------------
+# The `arms.left` / `arms.right` keys name the arm's fixed place in the shared
+# world frame, not the operator's stance: `arms.left` is 192.168.1.2 at +y and
+# `arms.right` is 192.168.1.3 at -y. Standing behind, +y is on the operator's
+# left; standing in front and facing the arms, +y is on the operator's RIGHT.
+# Mirrored motion is world-matched for a front-standing operator, so the hand
+# nearest each arm should drive it, which means the right controller drives
+# 192.168.1.2 and the left controller drives 192.168.1.3.
+#
+# VERIFIED 2026-08-12: the front-facing operator accepted this swapped
+# assignment and the complete Mirrored bimanual response during the 44.990 s
+# run `20260812-181814_dual-mirrored-45s-first-physical-01`.
+#
+# BASE GEOMETRY MEASURED 2026-08-12. In a shared frame whose origin is midway
+# between the bases, +X points forward, +Y points toward the left arm, and +Z
+# points up: the bases are exactly 500 mm apart, with no X/Z offset, equal
+# height, parallel forward axes, and no relative yaw. Both base centers are
+# 50.8 mm (2 in) forward of the table's rear edge. Overall table dimensions
+# remain separate simulation assumptions.
+project:
+  name: widowxai-quest-teleop
+  mode: dual_widowxai
+
+quest:
+  mode: bimanual
+  websocket_url: ws://127.0.0.1:8443/ws
+  prepare_tabletop_tracking_via_adb: true
+  stale_timeout_s: 0.100
+  fresh_samples_to_recover: 3
+
+model:
+  xml_path: third_party/trossen_arm_mujoco/trossen_arm_mujoco/assets/wxai/wxai_follower.xml
+  end_effector_site: ee_site
+  wrist_anchor_site: wrist_anchor
+  simulation_start_q_rad: [0.0, 1.0471975512, 1.3089969390, -1.0471975512, 0.0, 0.0]
+
+arms:
+  left:
+    # The arm at +y / 192.168.1.2. On a front-standing operator's RIGHT, so the
+    # right controller drives it. Both Quest dropdowns must read Mirrored.
+    controller_hand: right
+    mapping_mode: mirror
+    # Verified on hardware 2026-07-27: .2 is the arm on the operator's LEFT when
+    # standing behind. The earlier assignment was a guess and drove each
+    # controller to the opposite arm.
+    robot_ip: 192.168.1.2
+    # The only mirror transform the operator has physically accepted, at 50%
+    # scale with full gripper control. This profile runs well below that.
+    calibration: configs/calibrations/right_mirror_20260723_accepted.json
+    base_transform:
+      # MEASURED: +250 mm across from the shared midpoint (500 mm total).
+      measurement_status: measured
+      position_m: [0.0, 0.25, 0.0]
+      quaternion_wxyz: [1.0, 0.0, 0.0, 0.0]
+    # Conservative first-bring-up gains, matched to the Behind dual profile.
+    # Mirrored reverses left/right and forward/back, so a reflex that was safe
+    # under Behind now drives the opposite way; there is less reason to raise
+    # these here, not more.
+    translation_scale: 0.45
+    rotation_scale: 0.45
+    position_reach_limit_m: 0.075
+    rotation_reach_limit_rad: 0.18
+
+  right:
+    # The arm at -y / 192.168.1.3. On a front-standing operator's LEFT, so the
+    # left controller drives it.
+    controller_hand: left
+    mapping_mode: mirror
+    robot_ip: 192.168.1.3
+    # Physically accepted at this profile's exact 45% scope on 2026-08-12.
+    # The gripper trigger was not commanded and remains a separate test item.
+    calibration: configs/calibrations/left_mirror_all_motions_20260812_accepted.json
+    base_transform:
+      # MEASURED: -250 mm across from the shared midpoint (500 mm total).
+      measurement_status: measured
+      position_m: [0.0, -0.25, 0.0]
+      quaternion_wxyz: [1.0, 0.0, 0.0, 0.0]
+    translation_scale: 0.45
+    rotation_scale: 0.45
+    position_reach_limit_m: 0.075
+    rotation_reach_limit_rad: 0.18
+
+safety:
+  # One combined MuJoCo scene screens every commanded tick. Two independent
+  # single-arm models cannot see each other, so this must stay enabled.
+  cross_arm_collision: true
+  # A fault on either arm holds both arms rather than leaving one live.
+  coordinated_fault_hold: true
+  # Reject a commanded state whose closest left-to-right geometry pair is
+  # nearer than this, instead of waiting for actual contact.
+  cross_arm_clearance_m: 0.030
+  # Maximum acceptable measured gap between the two arms' driver sends. This
+  # is recorded and enforced, never assumed from single-loop ordering.
+  max_command_skew_s: 0.010
+
+control:
+  command_path: limited_interpolated
+  update_mode: quest_synchronized
+  loop_rate_hz: 90
+  minimum_command_interval_s: 0.008
+  command_spacing_stage: before_send
+  pose_filter_alpha: 0.8
+  pose_filter_translation_alpha: 0.8
+  pose_filter_rotation_alpha: 0.8
+  adaptive_rotation_filter:
+    enabled: true
+    minimum_cutoff_hz: 1.5
+    speed_coefficient: 20.0
+    speed_exponent: 2.0
+    derivative_cutoff_hz: 2.0
+    maximum_cutoff_hz: 35.0
+  joint_command_limits:
+    enabled: true
+    max_velocity: [5.4, 5.4, 5.4, 21.6, 21.6, 21.6]
+    max_acceleration: [1000.0, 1000.0, 1000.0, 2000.0, 2000.0, 2000.0]
+    max_jerk: [100000.0, 100000.0, 100000.0, 200000.0, 200000.0, 200000.0]
+  gripper_command_limits:
+    enabled: true
+    max_velocity: [0.120]
+    max_acceleration: [1.200]
+
+ik:
+  backend: decoupled
+  lambda_position: 0.05
+  lambda_position_extra: 0.15
+  position_manipulability_threshold: 0.05
+  rest_bias: 0.02
+  lambda_rotation: 0.05
+  lambda_rotation_extra: 0.40
+  rotation_manipulability_threshold: 0.50
+  orientation_hold_error_rad: 2.20
+  max_dq_per_joint_rad: [0.06, 0.06, 0.06, 0.24, 0.24, 0.24]
+
+hardware:
+  enabled: true
+  workstation_preflight:
+    enabled: true
+    require_external_power: true
+    required_power_profile: performance
+    expected_robot_source_ip: 192.168.1.10
+    require_direct_route: true
+  require_explicit_enable: true
+  control_gripper: true
+  end_effector_profile: legacy_1_8
+  driver_package: trossen-arm
+  driver_version_tested: 1.9.3  # both arms on firmware 1.9.4 since 2026-10-20; hardware re-validation pending
+  command_goal_time_s: 0.025
+  arm_velocity_feedforward:
+    enabled: true
+    filter_alpha: 0.5
+    gain: 0.5
+    max_velocity_rad_s: [1.5, 1.25, 2.75, 2.0, 2.5, 3.0]
+  startup_ramp_duration_s: 2.0
+  startup_ramp_rate_hz: 120
+  startup_max_joint_delta_rad: [0.006, 0.006, 0.006, 0.006, 0.006, 0.006]
+  startup_collision_samples: 501
+  startup_gripper_move_duration_s: 2.0
+  return_to_rest_on_exit: true
+  rest_q_rad: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+  rest_gripper_m: 0.0
+  shutdown_move_duration_s: 2.0
+  # Dual-arm work is unproven; keep an explicit duration cap unlike the
+  # accepted single-arm profile.
+  max_demo_duration_s: 60.0
+  joint_limit_margin_rad: 0.10
+  max_feedback_error_rad: 0.08
+  feedback_tracking_delay_s: 0.025
+  max_gripper_feedback_error_m: 0.003
+  feedback_check_rate_hz: 50
+  gripper_open_m: 0.040
+  gripper_min_demo_m: 0.0
+  max_gripper_delta_m: 0.0020
+
+telemetry:
+  output_dir: runs
+  format: csv

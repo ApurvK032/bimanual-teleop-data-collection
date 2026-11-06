@@ -1,0 +1,70 @@
+project:
+  name: widowxai-quest-teleop
+  mode: calibrated_adaptive_30pct_mujoco
+
+model:
+  xml_path: third_party/trossen_arm_mujoco/trossen_arm_mujoco/assets/wxai/wxai_follower.xml
+  end_effector_site: ee_site
+  wrist_anchor_site: wrist_anchor
+  simulation_start_q_rad: [0.0, 1.0471975512, 1.3089969390, -1.0471975512, 0.0, 0.0]
+
+quest:
+  hand: left
+  websocket_url: ws://127.0.0.1:8443/ws
+  stale_timeout_s: 0.100
+  fresh_samples_to_recover: 3
+  calibration: configs/calibrations/left_guided_6dof.json
+  translation_scale: 0.45
+  rotation_scale: 0.45
+  position_reach_limit_m: 0.075
+  rotation_reach_limit_rad: 0.18
+
+control:
+  command_path: limited_interpolated
+  update_mode: quest_synchronized
+  loop_rate_hz: 90
+  # Translation retains the reference low-latency EMA. Rotation bandwidth
+  # adapts from tremor suppression at rest to near-raw deliberate tracking.
+  pose_filter_alpha: 0.8
+  pose_filter_translation_alpha: 0.8
+  pose_filter_rotation_alpha: 0.8
+  adaptive_rotation_filter:
+    enabled: true
+    minimum_cutoff_hz: 1.5
+    speed_coefficient: 20.0
+    speed_exponent: 2.0
+    derivative_cutoff_hz: 2.0
+    maximum_cutoff_hz: 35.0
+  joint_command_limits:
+    enabled: true
+    # Wide guards for exceptional IK impulses, not normal motion shaping.
+    max_velocity: [5.4, 5.4, 5.4, 21.6, 21.6, 21.6]
+    max_acceleration: [1000.0, 1000.0, 1000.0, 2000.0, 2000.0, 2000.0]
+    max_jerk: [100000.0, 100000.0, 100000.0, 200000.0, 200000.0, 200000.0]
+  gripper_command_limits:
+    enabled: true
+    max_velocity: [0.120]
+    max_acceleration: [1.200]
+
+ik:
+  backend: decoupled
+  lambda_position: 0.05
+  lambda_position_extra: 0.15
+  position_manipulability_threshold: 0.05
+  rest_bias: 0.02
+  lambda_rotation: 0.05
+  lambda_rotation_extra: 0.40
+  rotation_manipulability_threshold: 0.50
+  orientation_hold_error_rad: 2.20
+  max_dq_per_joint_rad: [0.06, 0.06, 0.06, 0.24, 0.24, 0.24]
+
+hardware:
+  enabled: false
+  require_explicit_enable: false
+  control_gripper: true
+  gripper_open_m: 0.040
+  gripper_min_demo_m: 0.0
+
+telemetry:
+  output_dir: runs
+  format: csv

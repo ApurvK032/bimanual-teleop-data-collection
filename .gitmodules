@@ -1,0 +1,6 @@
+[submodule "teleop/third_party/trossen_arm_mujoco"]
+	path = teleop/third_party/trossen_arm_mujoco
+	url = https://github.com/TrossenRobotics/trossen_arm_mujoco.git
+[submodule "teleop/third_party/trossen_arm_description"]
+	path = teleop/third_party/trossen_arm_description
+	url = https://github.com/TrossenRobotics/trossen_arm_description.git

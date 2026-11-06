@@ -1,0 +1,113 @@
+{
+  "name": "right_behind_mujoco_20260811_derived",
+  "position_matrix": [
+    [
+      0.059428675844069315,
+      0.019475750320412436,
+      -0.9980425480092908
+    ],
+    [
+      -0.998226515750884,
+      -0.00231816284474504,
+      -0.059484866755127055
+    ],
+    [
+      -0.0034721375650356976,
+      0.9998076421344669,
+      0.019303445035725453
+    ]
+  ],
+  "rotation_matrix": [
+    [
+      0.059428675844069315,
+      0.019475750320412436,
+      -0.9980425480092908
+    ],
+    [
+      -0.998226515750884,
+      -0.00231816284474504,
+      -0.059484866755127055
+    ],
+    [
+      -0.0034721375650356976,
+      0.9998076421344669,
+      0.019303445035725453
+    ]
+  ],
+  "orientation_delta_mode": "matrix_conjugate",
+  "task_rotation_signs": [
+    1.0,
+    1.0,
+    1.0
+  ],
+  "vectors_are_columns": true,
+  "quaternion_convention": "wxyz",
+  "guided_calibration": {
+    "rotation_frame_linked_to_position": true,
+    "task_frame_determinant": 1.0,
+    "source_calibration": "configs/calibrations/left_behind_mujoco_20260811.json",
+    "position_quality": {
+      "sample_count": 6,
+      "median_axis_error_deg": 5.223953547602152,
+      "max_axis_error_deg": 10.342047471900175,
+      "minimum_alignment": 0.9837535559902811,
+      "axis_errors_deg": [
+        3.792391380479456,
+        10.342047471900175,
+        1.8723628074569802,
+        2.4011000942544607,
+        6.655515714724848,
+        9.36354012654953
+      ],
+      "excitation_singular_values": [
+        1.5722085423362955,
+        1.420485565469497,
+        1.228975613141931
+      ],
+      "mapping_determinant": 1.0
+    },
+    "rotation_quality": {
+      "sample_count": 6,
+      "median_axis_error_deg": 9.644249188390955,
+      "max_axis_error_deg": 15.24638096011814,
+      "minimum_alignment": 0.9648039360503525,
+      "axis_errors_deg": [
+        9.461842325359838,
+        5.540173791262979,
+        15.24638096011814,
+        14.320615985092363,
+        2.512976204025661,
+        9.82665605142207
+      ]
+    },
+    "captures": []
+  },
+  "quest_input": {
+    "hand": "right",
+    "mapping_mode": "real"
+  },
+  "derivation": {
+    "status": "derived_for_mujoco",
+    "method": "identity hand transfer in the shared Quest world frame",
+    "source_calibration": "configs/calibrations/left_behind_mujoco_20260811.json",
+    "source_hand": "left",
+    "target_hand": "right",
+    "mapping_mode": "real",
+    "independent_right_hand_capture_performed": false,
+    "assumptions": [
+      "Both bimanual controllers are expressed in the same Quest world frame.",
+      "Both controllers use Behind/Parallel (real) transport semantics.",
+      "Both MuJoCo arm models use the same local task-axis convention."
+    ]
+  },
+  "validation_scope": {
+    "status": "simulation_only",
+    "allowed_runtime": "mujoco",
+    "hardware_accepted": false,
+    "note": "Derived from the measured left-hand MuJoCo task frame; do not use for physical robot output."
+  },
+  "physical_validation": {
+    "status": "simulation_only",
+    "hardware_motion_performed": false
+  }
+}

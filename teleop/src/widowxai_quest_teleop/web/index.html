@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>WidowXAI Quest Teleop</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <main>
+    <p class="eyebrow">SIMULATION FIRST</p>
+    <h1>WidowXAI Quest Teleop</h1>
+    <p id="controller-description">This page streams the selected Meta Quest controller. Grip is the clutch; trigger controls the gripper.</p>
+    <section class="input-settings" aria-labelledby="input-settings-title">
+      <div>
+        <p class="section-title" id="input-settings-title">Controller input</p>
+        <p class="field-help">Choose before entering passthrough. The selection is remembered on this headset.</p>
+      </div>
+      <label>
+        Input mode
+        <select id="input-mode-select">
+          <option value="single">Single arm — one selected controller</option>
+          <option value="bimanual">Bimanual — both controllers, two arms</option>
+        </select>
+      </label>
+      <div id="single-arm-fields">
+        <label>
+          Controller
+          <select id="hand-select">
+            <option value="left">Left hand</option>
+            <option value="right">Right hand</option>
+          </select>
+        </label>
+        <label>
+          Robot motion
+          <select id="mapping-mode-select">
+            <option value="real">Behind / Parallel — matched motion</option>
+            <option value="mirror">Mirrored — flip left/right, front/back, screw, nod-no</option>
+          </select>
+        </label>
+      </div>
+      <div id="bimanual-fields" hidden>
+        <p class="field-help">Each arm keeps its own mapping. Mirroring is a single-arm operator-view convention and is never applied as one global switch across both arms.</p>
+        <label>
+          Left arm motion
+          <select id="left-mapping-mode-select">
+            <option value="real">Behind / Parallel — matched motion</option>
+            <option value="mirror">Mirrored</option>
+          </select>
+        </label>
+        <label>
+          Right arm motion
+          <select id="right-mapping-mode-select">
+            <option value="real">Behind / Parallel — matched motion</option>
+            <option value="mirror">Mirrored</option>
+          </select>
+        </label>
+      </div>
+      <button id="apply-input" class="secondary" type="button">Apply input</button>
+      <p id="input-selection" class="selection-summary"></p>
+    </section>
+    <section class="camera-settings" aria-labelledby="camera-settings-title">
+      <div class="camera-heading">
+        <div>
+          <p class="section-title" id="camera-settings-title">Operator camera views</p>
+          <p class="field-help">Assign each physical camera once, choose which views appear, then apply before entering passthrough.</p>
+        </div>
+        <button id="cycle-camera-view" class="secondary compact" type="button">Cycle view (B)</button>
+      </div>
+      <div class="camera-role-settings">
+        <div class="camera-role-row" data-camera-role="scene">
+          <label>
+            Scene
+            <select id="scene-camera-select" class="camera-device-select">
+              <option value="">No camera</option>
+            </select>
+          </label>
+          <label class="camera-enabled-toggle">
+            <input id="scene-camera-enabled" type="checkbox">
+            Show in passthrough
+          </label>
+        </div>
+        <div class="camera-role-row" data-camera-role="left_wrist">
+          <label>
+            Left wrist
+            <select id="left-wrist-camera-select" class="camera-device-select">
+              <option value="">No camera</option>
+            </select>
+          </label>
+          <label class="camera-enabled-toggle">
+            <input id="left-wrist-camera-enabled" type="checkbox">
+            Show in passthrough
+          </label>
+        </div>
+        <div class="camera-role-row" data-camera-role="right_wrist">
+          <label>
+            Right wrist
+            <select id="right-wrist-camera-select" class="camera-device-select">
+              <option value="">No camera</option>
+            </select>
+          </label>
+          <label class="camera-enabled-toggle">
+            <input id="right-wrist-camera-enabled" type="checkbox">
+            Show in passthrough
+          </label>
+        </div>
+      </div>
+      <div class="camera-setup-actions">
+        <button id="apply-camera-setup" class="secondary compact" type="button">Apply camera setup</button>
+        <button id="refresh-cameras" class="secondary compact" type="button">Refresh cameras</button>
+      </div>
+      <p id="camera-setup-status" class="field-help">Discovering cameras on this machine…</p>
+      <div class="camera-previews">
+        <figure id="scene-preview-card">
+          <canvas id="scene-preview" width="320" height="240"></canvas>
+          <figcaption id="scene-preview-caption">Scene · no camera</figcaption>
+        </figure>
+        <figure id="left-wrist-preview-card" hidden>
+          <canvas id="left-wrist-preview" width="320" height="240"></canvas>
+          <figcaption id="left-wrist-preview-caption">Left wrist · no camera</figcaption>
+        </figure>
+        <figure id="right-wrist-preview-card">
+          <canvas id="right-wrist-preview" width="320" height="240"></canvas>
+          <figcaption id="right-wrist-preview-caption">Right wrist · no camera</figcaption>
+        </figure>
+      </div>
+      <p id="camera-status" class="camera-status">Waiting for camera service on USB port 8444</p>
+      <p id="camera-view-mode" class="selection-summary">No camera views selected</p>
+    </section>
+    <div class="status"><span id="dot"></span><span id="status">Connecting to relay…</span></div>
+    <div class="actions">
+      <button id="enter" disabled>Checking XR support…</button>
+      <button id="exit" class="secondary" disabled>Exit VR</button>
+      <button id="calibrate" class="secondary">Calibrate wrist</button>
+    </div>
+    <dl>
+      <div><dt>Captured frames</dt><dd id="captured">0</dd></div>
+      <div><dt>Sent frames</dt><dd id="sent">0</dd></div>
+      <div><dt>Coalesced frames</dt><dd id="coalesced">0</dd></div>
+      <div><dt>Wrist pivot</dt><dd id="calibration">Not calibrated</dd></div>
+      <div><dt>USB page</dt><dd>http://localhost:8443/</dd></div>
+    </dl>
+    <p class="warning">This interface does not enable physical-arm output. The four saved motion profiles use reduced gain and fixed reach limits. Physical acceptance is profile-specific; simultaneous dual-gripper behavior remains pending.</p>
+  </main>
+  <canvas id="xr-canvas"></canvas>
+  <script src="/camera_view.js"></script>
+  <script src="/client.js"></script>
+</body>
+</html>

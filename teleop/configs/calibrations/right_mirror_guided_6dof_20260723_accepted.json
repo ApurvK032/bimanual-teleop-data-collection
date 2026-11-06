@@ -1,0 +1,140 @@
+{
+  "name": "right_mirror_guided_6dof_20260723_accepted",
+  "position_matrix": [
+    [
+      0.06751099338877033,
+      0.06855319796897152,
+      -0.995360600395599
+    ],
+    [
+      0.997425673136004,
+      -0.02880747262086301,
+      0.06566700914757254
+    ],
+    [
+      0.024172139765658438,
+      0.99723146188306,
+      0.070321540723481
+    ]
+  ],
+  "rotation_matrix": [
+    [
+      0.06751099338877033,
+      0.06855319796897152,
+      -0.995360600395599
+    ],
+    [
+      0.997425673136004,
+      -0.02880747262086301,
+      0.06566700914757254
+    ],
+    [
+      0.024172139765658438,
+      0.99723146188306,
+      0.070321540723481
+    ]
+  ],
+  "orientation_delta_mode": "matrix_conjugate",
+  "task_rotation_signs": [
+    1.0,
+    1.0,
+    1.0
+  ],
+  "vectors_are_columns": true,
+  "quaternion_convention": "wxyz",
+  "quest_input": {
+    "hand": "right",
+    "mapping_mode": "mirror"
+  },
+  "physical_axis_acceptance": {
+    "status": "superseded_mislabeled_not_mirror_acceptance",
+    "date": "2026-07-23",
+    "superseded_by": "configs/calibrations/right_behind_guided_6dof_20260723_accepted.json",
+    "operator_correction": "The accepted behavior was Behind/real native-parallel, not mirrored behavior.",
+    "source_calibration": "configs/calibrations/right_real_guided_6dof_20260723_candidate.json",
+    "working_calibration": "configs/calibrations/right_mirror_physical_axis_validation_20260723_working.json",
+    "operator_report": "All motions and mapping were perfect for Behind/real native-parallel motion; this was not mirrored behavior.",
+    "scope": {
+      "controller": "right",
+      "mapping_mode": "mirror",
+      "profile": "configs/right_mirror_axis_validation_hardware.yaml",
+      "translation_scale": 0.2,
+      "rotation_scale": 0.2,
+      "position_reach_limit_m": 0.035,
+      "rotation_reach_limit_rad": 0.08,
+      "gripper_commanded": false
+    },
+    "derivation": {
+      "webxr_sagittal_reflection": [
+        [
+          -1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "formula": "right_mirror_task_frame = right_real_task_frame @ webxr_sagittal_reflection",
+      "task_frame_determinant": -1.0
+    },
+    "motions": {
+      "right_left_translation": "passed",
+      "up_down_translation": "passed",
+      "forward_backward_translation": "passed",
+      "screw_rotation": "passed",
+      "nod_yes_rotation": "passed",
+      "nod_no_rotation": "passed"
+    },
+    "telemetry": {
+      "run_count": 6,
+      "total_rows": 8099,
+      "total_ik_failures": 0,
+      "runs": [
+        {
+          "path": "runs/2026-07-23/20260723-155250_right-mirror-axis-01-right",
+          "rows": 1350,
+          "ik_failures": 0
+        },
+        {
+          "path": "runs/2026-07-23/20260723-155315_right-mirror-axis-01-right",
+          "rows": 1349,
+          "ik_failures": 0
+        },
+        {
+          "path": "runs/2026-07-23/20260723-155338_right-mirror-axis-01-right",
+          "rows": 1350,
+          "ik_failures": 0
+        },
+        {
+          "path": "runs/2026-07-23/20260723-155400_right-mirror-axis-01-right",
+          "rows": 1350,
+          "ik_failures": 0
+        },
+        {
+          "path": "runs/2026-07-23/20260723-155427_right-mirror-axis-01-right",
+          "rows": 1350,
+          "ik_failures": 0
+        },
+        {
+          "path": "runs/2026-07-23/20260723-155505_right-mirror-axis-01-right",
+          "rows": 1350,
+          "ik_failures": 0
+        }
+      ]
+    },
+    "stable_left_baseline_unchanged": true,
+    "promotion_limits": [
+      "Acceptance applies to Right/Mirror at the recorded reduced gains and reach limits.",
+      "The gripper was not commanded during this acceptance.",
+      "Higher gains, larger reach, gripper control, or a different hand/mapping mode require separate simulation and physical validation."
+    ]
+  }
+}

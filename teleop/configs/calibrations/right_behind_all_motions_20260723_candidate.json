@@ -1,0 +1,28 @@
+{
+  "name": "right_behind_all_motions_20260723_candidate",
+  "position_matrix": [
+    [-0.06751099338877033, 0.06855319796897152, -0.995360600395599],
+    [-0.997425673136004, -0.02880747262086301, 0.06566700914757254],
+    [-0.024172139765658438, 0.99723146188306, 0.070321540723481]
+  ],
+  "rotation_matrix": [
+    [-0.06751099338877033, 0.06855319796897152, -0.995360600395599],
+    [-0.997425673136004, -0.02880747262086301, 0.06566700914757254],
+    [-0.024172139765658438, 0.99723146188306, 0.070321540723481]
+  ],
+  "task_position_signs": [1.0, 1.0, 1.0],
+  "task_rotation_signs": [1.0, 1.0, 1.0],
+  "orientation_delta_mode": "matrix_conjugate",
+  "vectors_are_columns": true,
+  "quaternion_convention": "wxyz",
+  "quest_input": {
+    "hand": "right",
+    "mapping_mode": "real"
+  },
+  "task_mapping_semantics": {
+    "name": "behind",
+    "status": "candidate_pending_physical_validation",
+    "source": "configs/calibrations/right_real_guided_6dof_20260723_candidate.json",
+    "algebraic_equivalent_acceptance": "configs/calibrations/right_behind_guided_6dof_20260723_accepted.json"
+  }
+}

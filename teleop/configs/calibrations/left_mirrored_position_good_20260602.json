@@ -1,0 +1,19 @@
+{
+  "name": "left_mirrored_position_good_20260602",
+  "position_matrix": [
+    [1.0, 0.0, 0.0],
+    [0.0, 0.0, 1.0],
+    [0.0, 1.0, 0.0]
+  ],
+  "rotation_matrix_unconfirmed": [
+    [1.0, 0.0, 0.0],
+    [0.0, 0.0, 1.0],
+    [0.0, 1.0, 0.0]
+  ],
+  "orientation_delta_mode": "matrix_conjugate",
+  "task_rotation_signs_unconfirmed": [1.0, 1.0, 1.0],
+  "orientation_enabled": false,
+  "vectors_are_columns": true,
+  "quaternion_convention": "wxyz"
+}
+

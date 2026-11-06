@@ -1,0 +1,64 @@
+project:
+  name: widowxai-cad-rest-commissioning
+  mode: cad_rest_mujoco_only
+
+model:
+  xml_path: third_party/trossen_arm_mujoco/trossen_arm_mujoco/assets/wxai/wxai_follower.xml
+  # This workflow intentionally has no intermediate home pose.
+  rest_q_rad: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+  gripper_preview_m: 0.0
+
+cad:
+  udp_host: 127.0.0.1
+  udp_port: 5055
+  expected_names: [link1_link, link2_link, link3_link, link4_link, link5_link]
+  require_root_locked: true
+  stale_timeout_s: 0.100
+  fresh_samples_to_recover: 3
+  max_packet_age_s: 0.100
+  max_future_skew_s: 0.050
+  # A larger per-frame change is treated as a tracker discontinuity. At the
+  # normal 25 Hz tracker rate, 0.12 rad is already about 3 rad/s source motion.
+  max_source_step_rad: [0.12, 0.12, 0.12, 0.12, 0.12]
+  # Signs inherited from the CAD-to-MuJoCo direction test. These still require
+  # isolated physical verification before any real-arm output is enabled.
+  signs: [1.0, 1.0, -1.0, -1.0, -1.0]
+  # Begin at ten percent leader-to-follower angular travel.
+  scales: [0.10, 0.10, 0.10, 0.10, 0.10]
+  # Commissioning deadbands measured from locked-root stationary traces. The
+  # Z-axis base-yaw and wrist-roll joints need larger thresholds because their
+  # CAD silhouettes are weak around the rotation axis. Deliberate isolated
+  # tests must cross these thresholds slowly before the scale is increased.
+  source_deadband_rad: [0.15, 0.02, 0.01, 0.025, 0.15]
+  source_filter:
+    enabled: true
+    minimum_cutoff_hz: 2.0
+    speed_coefficient: 4.0
+    derivative_cutoff_hz: 2.0
+    maximum_cutoff_hz: 20.0
+
+commissioning:
+  # Two-degree global envelope around rest. J1 and J2 are at their official
+  # lower limits at rest, so they may initially move only into positive range.
+  minimum_delta_rad: [-0.0349065850, 0.0, 0.0, -0.0349065850, -0.0349065850, -0.000001]
+  maximum_delta_rad: [0.0349065850, 0.0349065850, 0.0349065850, 0.0349065850, 0.0349065850, 0.000001]
+  max_command_step_rad: [0.003, 0.003, 0.003, 0.003, 0.003, 0.000002]
+  return_to_rest_timeout_s: 3.0
+
+control:
+  loop_rate_hz: 100
+  joint_command_limits:
+    enabled: true
+    max_velocity: [0.10, 0.10, 0.10, 0.10, 0.10, 0.01]
+    max_acceleration: [0.50, 0.50, 0.50, 0.50, 0.50, 0.05]
+
+telemetry:
+  output_dir: runs
+
+hardware:
+  # The first implementation is deliberately incapable of opening the driver.
+  enabled: false
+  live_output_implemented: false
+  control_gripper: false
+  start_at_rest: true
+  return_to_rest_on_exit: true

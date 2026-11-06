@@ -1,0 +1,47 @@
+[build-system]
+requires = ["setuptools>=69"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "bimanual-collect"
+version = "0.1.0"
+description = "Data collection for WidowX AI arms teleoperated with a Quest 3: lossless stereo recording, quality checks, depth, LeRobot export, and a browser app"
+readme = "README.md"
+license = "MIT"
+requires-python = ">=3.10"
+dependencies = [
+    "numpy>=1.26",
+    "opencv-python-headless>=4.9",
+    "pyyaml>=6",
+]
+
+[project.optional-dependencies]
+# The app also needs the teleop package in teleop/: pip install -e ./teleop (the installer does it)
+session = ["fastapi>=0.110", "uvicorn>=0.29", "httpx>=0.27"]
+sim = ["mujoco>=3.1", "pillow>=10"]
+depth = ["torch>=2.3", "torchvision>=0.18"]
+lerobot = ["lerobot==0.4.3"]
+dev = ["pytest>=8", "ruff>=0.6", "httpx>=0.27"]
+
+[project.scripts]
+bimanual-collect = "bimanual_collect.__main__:main"
+
+[tool.setuptools]
+packages = ["bimanual_collect"]
+
+[tool.setuptools.package-data]
+bimanual_collect = ["web/*.js", "web/console/*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
+addopts = "-p no:cacheprovider"
+
+[tool.ruff]
+line-length = 130
+target-version = "py310"
+extend-exclude = ["teleop", "external", "data", "samples", "state"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "UP"]
+ignore = ["E731", "B905"]

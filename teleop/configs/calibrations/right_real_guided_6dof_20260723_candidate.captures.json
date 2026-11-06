@@ -1,0 +1,351 @@
+{
+  "output": "configs/calibrations/right_real_guided_6dof_20260723_candidate.json",
+  "hand": "right",
+  "mapping_mode": "real",
+  "captures": [
+    {
+      "gesture": "right",
+      "kind": "translation",
+      "repeat": 1,
+      "observed_operator_vector": [
+        0.15670880632148443,
+        0.012378831318771377,
+        0.0007115011781832954
+      ],
+      "desired_robot_axis": [
+        0.0,
+        -1.0,
+        0.0
+      ],
+      "translation_distance_m": 0.15719857403122228,
+      "rotation_angle_deg": 10.833823437521824
+    },
+    {
+      "gesture": "right",
+      "kind": "translation",
+      "repeat": 2,
+      "observed_operator_vector": [
+        0.1558213558841965,
+        0.017240716516016996,
+        -0.0014215176419843758
+      ],
+      "desired_robot_axis": [
+        0.0,
+        -1.0,
+        0.0
+      ],
+      "translation_distance_m": 0.15677869105200984,
+      "rotation_angle_deg": 9.665833094835046,
+      "repeat_axis_separation_deg": 1.958684067518785
+    },
+    {
+      "gesture": "up",
+      "kind": "translation",
+      "repeat": 1,
+      "observed_operator_vector": [
+        0.007415481149019703,
+        0.1737228505942503,
+        0.004982679710971429
+      ],
+      "desired_robot_axis": [
+        0.0,
+        0.0,
+        1.0
+      ],
+      "translation_distance_m": 0.1739524224504097,
+      "rotation_angle_deg": 13.192240580759568
+    },
+    {
+      "gesture": "up",
+      "kind": "translation",
+      "repeat": 2,
+      "observed_operator_vector": [
+        0.008309784216402228,
+        0.19290603160419117,
+        0.0039648367007797366
+      ],
+      "desired_robot_axis": [
+        0.0,
+        0.0,
+        1.0
+      ],
+      "translation_distance_m": 0.19312563132081723,
+      "rotation_angle_deg": 11.782219970283137,
+      "repeat_axis_separation_deg": 0.46558242653829585
+    },
+    {
+      "gesture": "forward",
+      "kind": "translation",
+      "repeat": 1,
+      "observed_operator_vector": [
+        -0.028586719643588644,
+        0.022848242195928736,
+        -0.1836408407004368
+      ],
+      "desired_robot_axis": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "translation_distance_m": 0.1872517051580256,
+      "rotation_angle_deg": 5.445143213626048
+    },
+    {
+      "gesture": "forward",
+      "kind": "translation",
+      "repeat": 2,
+      "observed_operator_vector": [
+        -0.01640951441859214,
+        0.015219882307705102,
+        -0.1616078038129104
+      ],
+      "desired_robot_axis": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "translation_distance_m": 0.16315023516423907,
+      "rotation_angle_deg": 8.148150990968258,
+      "repeat_axis_separation_deg": 3.4549446067116447
+    },
+    {
+      "gesture": "screw_clockwise",
+      "kind": "rotation",
+      "repeat": 1,
+      "observed_operator_vector": [
+        -0.10516008966402164,
+        -0.1700482487603515,
+        -0.7894245788052365
+      ],
+      "desired_robot_axis": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "translation_distance_m": 0.01740837738737752,
+      "rotation_angle_deg": 46.65882840616904,
+      "linked_task_axis_error_deg": 16.403307729285203
+    },
+    {
+      "gesture": "screw_clockwise",
+      "kind": "rotation",
+      "repeat": 2,
+      "observed_operator_vector": [
+        -0.011403754759283227,
+        -0.09053756661975906,
+        -0.8151539495265092
+      ],
+      "desired_robot_axis": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "translation_distance_m": 0.01416625565960744,
+      "rotation_angle_deg": 46.99661850790636,
+      "repeat_axis_separation_deg": 8.803736259372611,
+      "linked_task_axis_error_deg": 10.718264183786939
+    },
+    {
+      "gesture": "nod_yes_down",
+      "kind": "rotation",
+      "repeat": 1,
+      "observed_operator_vector": [
+        -0.6144800754384481,
+        0.06561668963162447,
+        0.04225584779262115
+      ],
+      "desired_robot_axis": [
+        0.0,
+        1.0,
+        0.0
+      ],
+      "translation_distance_m": 0.014687538673889486,
+      "rotation_angle_deg": 35.48995441446453,
+      "linked_task_axis_error_deg": 7.733502510565718
+    },
+    {
+      "gesture": "nod_yes_down",
+      "kind": "rotation",
+      "repeat": 2,
+      "observed_operator_vector": [
+        -0.8667430603072462,
+        0.15819887572900537,
+        0.10275211542132473
+      ],
+      "desired_robot_axis": [
+        0.0,
+        1.0,
+        0.0
+      ],
+      "translation_distance_m": 0.029938530875238303,
+      "rotation_angle_deg": 50.82327531913736,
+      "repeat_axis_separation_deg": 5.040192663004589,
+      "linked_task_axis_error_deg": 12.290976913417323
+    },
+    {
+      "gesture": "nod_no_left",
+      "kind": "rotation",
+      "repeat": 1,
+      "observed_operator_vector": [
+        -0.011596210248168889,
+        0.9753330901314247,
+        0.014259307406575727
+      ],
+      "desired_robot_axis": [
+        0.0,
+        0.0,
+        1.0
+      ],
+      "translation_distance_m": 0.01615262275756338,
+      "rotation_angle_deg": 55.892390803836996,
+      "linked_task_axis_error_deg": 3.272122324404797
+    },
+    {
+      "gesture": "nod_no_left",
+      "kind": "rotation",
+      "repeat": 2,
+      "observed_operator_vector": [
+        0.07819446857611079,
+        0.9269948296745494,
+        0.06787144224813371
+      ],
+      "desired_robot_axis": [
+        0.0,
+        0.0,
+        1.0
+      ],
+      "translation_distance_m": 0.023423670411670434,
+      "rotation_angle_deg": 53.44318378686512,
+      "repeat_axis_separation_deg": 6.429485589935248,
+      "linked_task_axis_error_deg": 6.195829492703009
+    }
+  ],
+  "position_observed": [
+    [
+      0.15670880632148443,
+      0.012378831318771377,
+      0.0007115011781832954
+    ],
+    [
+      0.1558213558841965,
+      0.017240716516016996,
+      -0.0014215176419843758
+    ],
+    [
+      0.007415481149019703,
+      0.1737228505942503,
+      0.004982679710971429
+    ],
+    [
+      0.008309784216402228,
+      0.19290603160419117,
+      0.0039648367007797366
+    ],
+    [
+      -0.028586719643588644,
+      0.022848242195928736,
+      -0.1836408407004368
+    ],
+    [
+      -0.01640951441859214,
+      0.015219882307705102,
+      -0.1616078038129104
+    ]
+  ],
+  "position_desired": [
+    [
+      0.0,
+      -1.0,
+      0.0
+    ],
+    [
+      0.0,
+      -1.0,
+      0.0
+    ],
+    [
+      0.0,
+      0.0,
+      1.0
+    ],
+    [
+      0.0,
+      0.0,
+      1.0
+    ],
+    [
+      1.0,
+      0.0,
+      0.0
+    ],
+    [
+      1.0,
+      0.0,
+      0.0
+    ]
+  ],
+  "rotation_observed": [
+    [
+      -0.10516008966402164,
+      -0.1700482487603515,
+      -0.7894245788052365
+    ],
+    [
+      -0.011403754759283227,
+      -0.09053756661975906,
+      -0.8151539495265092
+    ],
+    [
+      -0.6144800754384481,
+      0.06561668963162447,
+      0.04225584779262115
+    ],
+    [
+      -0.8667430603072462,
+      0.15819887572900537,
+      0.10275211542132473
+    ],
+    [
+      -0.011596210248168889,
+      0.9753330901314247,
+      0.014259307406575727
+    ],
+    [
+      0.07819446857611079,
+      0.9269948296745494,
+      0.06787144224813371
+    ]
+  ],
+  "rotation_desired": [
+    [
+      1.0,
+      0.0,
+      0.0
+    ],
+    [
+      1.0,
+      0.0,
+      0.0
+    ],
+    [
+      0.0,
+      1.0,
+      0.0
+    ],
+    [
+      0.0,
+      1.0,
+      0.0
+    ],
+    [
+      0.0,
+      0.0,
+      1.0
+    ],
+    [
+      0.0,
+      0.0,
+      1.0
+    ]
+  ]
+}

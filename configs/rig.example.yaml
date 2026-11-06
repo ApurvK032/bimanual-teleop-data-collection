@@ -1,0 +1,76 @@
+# Rig configuration for bimanual_collect.
+# Copy to configs/rig.yaml (git-ignored) and edit it for your bench; without one, this file is used.
+# Relative paths are relative to the repository root.
+
+arms: null                     # 1 | 2 | null = whatever the teleop run logged (single- or two-arm)
+
+camera:
+  serial: null                 # ZED serial number; null = read it from the connected camera
+  mode: "1080"                 # 2k (2208x1242 per eye, 15 fps) | 1080 (1920x1080; 30/15) | 720 (1280x720; 60/30/15) | vga
+  fps: 15
+  backend: v4l2                # zed_sdk adds lossless SVO2 (requires ZED SDK 5.5+ and its Python bindings)
+  calibration: calibration/SN{serial}.conf   # factory calibration: python -m bimanual_collect calibration
+
+# Several cameras: list them here instead of the `camera:` section (which stays the default for one ZED).
+# The primary camera sets the dataset's step clock; others are matched to it by exposure time.
+# cameras:
+#   - name: zed                # overhead ZED (any model), found by serial or the only one connected
+#     type: zed
+#     backend: v4l2            # optional per-camera override
+#     serial: null
+#     mode: "720"
+#     fps: 30
+#     primary: true
+#   - name: wrist_right        # any UVC camera in YUYV (RealSense colour, webcam), by USB serial or name
+#     type: uvc
+#     match: "RealSense"       # or serial: "123456789"
+#     width: 640
+#     height: 480
+#     fps: 30
+
+paths:
+  data_raw: data/raw           # recorded episodes: <date>/session_HHMMSS/episode_NNNN/
+  data_lerobot: data/lerobot   # exported LeRobot datasets
+  state: state                 # generated: logs, patched Quest page, camera roles
+  teleop: teleop               # the teleop repo (git submodule)
+  teleop_runs: [teleop/runs]   # where the teleop launchers write telemetry
+  lerobot_python: .venv-lerobot/bin/python   # Python with lerobot installed (export jobs)
+  depth_python: .venv-stereo/bin/python       # Python with torch + torchvision (RAFT depth jobs)
+  arm_profile: configs/examples/dual_widowxai_bench.yaml   # two-arm teleop profile (copy it to configs/local/ and set your arm IPs)
+
+# Left-eye pixel boxes [x0, y0, x1, y1] in 2K coordinates (2208x1242), for the current camera position.
+# Other modes map them through the factory intrinsics. Re-measure after moving the camera.
+boxes_2k:
+  sync_roi: [950, 100, 1480, 950]     # both arms + table, operator outside: camera-vs-arm timing check
+  video_crop: [760, 20, 1660, 1060]   # table + both arms: review videos
+  table: [796, 10, 1319, 1059]        # table top
+
+depth:
+  near_mm: 900                 # colour scale of depth previews
+  far_mm: 1600
+
+export:
+  robot_type: null             # null: widowxai_bimanual_quest (2 arms) / widowxai_quest (1 arm)
+  crf: 18                      # AV1 quality (lower = better; LeRobot's default is 30)
+  eyes: both                   # both | left
+  image_size: null             # per-eye WxH for the dataset, e.g. 640x360; null = capture size
+
+# Quality checks run by `process`. An episode failing any of them is marked needs_review.
+qc:
+  max_camera_drop_pct: 2.0     # camera error-flagged frames (the dataset reuses the previous image)
+  max_torn_pct: 1.0            # sideways-wrapped frames
+  max_sync_abs_ms: 15.0        # camera-vs-arm offset found by the sync check
+  min_sync_r: 0.6              # how well image motion follows arm motion at that offset
+  min_duration_s: 5.0
+  require_task: true
+
+# Recording limits and labels.
+recording:
+  min_free_to_start_gb: 20     # refuse to start an episode below this
+  warn_free_gb: 50             # warn in the console and headset below this
+  stop_free_gb: 10             # stop a running episode below this
+operator: ""                   # default operator name for new episodes
+tasks:                         # task presets offered in the console (free text is always allowed)
+  - unfold the handkerchief
+  - fold the towel
+  - open the kit

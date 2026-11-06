@@ -1,0 +1,2 @@
+teleop/third_party/trossen_arm_mujoco 77aba5d32654f17945f139e63310e7a3ac2cd4ab https://github.com/TrossenRobotics/trossen_arm_mujoco.git
+teleop/third_party/trossen_arm_description 21d8b360c211c2ad8a065d8f462cbec0207626e7 https://github.com/TrossenRobotics/trossen_arm_description.git

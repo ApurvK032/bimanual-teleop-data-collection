@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Operator controls</title>
+<style>
+  :root {
+    --ink: #15191d; --muted: #555e68; --line: #cfd4d9; --soft: #f2f4f6; --accent: #1d4f91; --warn: #8a5a00;
+    --bad: #a3231f; --bad-soft: #fbeceb;
+  }
+  * { box-sizing: border-box; }
+  html { background: #e9ecef; }
+  body {
+    margin: 0 auto; padding: 0.55in 0.6in; max-width: 8.5in; background: #ffffff; color: var(--ink);
+    font: 10pt/1.38 "IBM Plex Sans", "Segoe UI", system-ui, -apple-system, sans-serif;
+  }
+  header { display: flex; justify-content: space-between; align-items: baseline; border-bottom: 2px solid var(--ink);
+    padding-bottom: 6px; margin-bottom: 12px; }
+  h1 { font-size: 15pt; margin: 0; letter-spacing: 0.01em; }
+  header p { margin: 0; color: var(--muted); font-size: 9pt; }
+  h2 { font-size: 8.5pt; text-transform: uppercase; letter-spacing: 0.08em; color: var(--accent); margin: 0 0 5px;
+    padding-bottom: 3px; border-bottom: 1px solid var(--line); }
+  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px 22px; }
+  .wide { grid-column: 1 / -1; }
+  table { width: 100%; border-collapse: collapse; }
+  td { padding: 3.5px 6px 3.5px 0; vertical-align: top; border-bottom: 1px solid var(--soft); }
+  td:first-child { width: 34%; white-space: nowrap; }
+  kbd { display: inline-block; min-width: 1.6em; padding: 0 5px; border: 1px solid var(--ink); border-radius: 3px;
+    font: 600 8.5pt "IBM Plex Mono", ui-monospace, monospace; text-align: center; background: var(--soft); }
+  ol { margin: 0; padding-left: 1.3em; }
+  ol li { margin: 0 0 3px; padding-left: 2px; }
+  .note { color: var(--muted); font-size: 8.8pt; }
+  .stop { border: 2px solid var(--bad); background: var(--bad-soft); padding: 7px 10px; border-radius: 4px; }
+  .stop h2 { color: var(--bad); border-color: rgba(163, 35, 31, 0.3); }
+  .stop ul { margin: 0; padding-left: 1.2em; }
+  .stop li { margin-bottom: 3px; }
+  .facing { border: 2px solid var(--warn); background: #fdf6e7; padding: 6px 10px; border-radius: 4px; }
+  .facing h2 { color: var(--warn); border-color: rgba(138, 90, 0, 0.3); }
+  .facing p { margin: 0; }
+  .msg { font: 600 8.5pt "IBM Plex Mono", ui-monospace, monospace; }
+  .controller { display: flex; gap: 10px; }
+  .controller > div { flex: 1; border: 1px solid var(--line); border-radius: 4px; padding: 6px 8px; }
+  .controller h3 { margin: 0 0 4px; font-size: 9pt; }
+  .controller p { margin: 0 0 3px; }
+  .toolbar { display: flex; gap: 8px; justify-content: flex-end; margin-bottom: 10px; }
+  .toolbar a, .toolbar button { font: 600 9pt system-ui, sans-serif; color: var(--accent); background: #fff;
+    border: 1px solid var(--accent); border-radius: 4px; padding: 5px 10px; cursor: pointer; text-decoration: none; }
+  footer { margin-top: 12px; padding-top: 6px; border-top: 1px solid var(--line); color: var(--muted); font-size: 8pt;
+    display: flex; justify-content: space-between; }
+  @page { size: letter; margin: 0.45in 0.5in; }
+  @media print {
+    html { background: #fff; }
+    body { padding: 0; max-width: none; font-size: 8.8pt; line-height: 1.27; }
+    .grid { gap: 8px 20px; }
+    h1 { font-size: 13pt; }
+    header { margin-bottom: 8px; }
+    td { padding: 2px 6px 2px 0; }
+    ol li { margin-bottom: 2px; }
+    footer { margin-top: 8px; }
+    .toolbar { display: none; }
+  }
+  @media (max-width: 640px) {
+    body { padding: 16px; }
+    .grid { grid-template-columns: 1fr; }
+    .controller { flex-direction: column; }
+  }
+</style>
+</head>
+<body>
+<div class="toolbar">
+  <button type="button" onclick="window.print()">Print / Save as PDF</button>
+  <a href="controls.pdf" download="robot-data-collection-controls.pdf">Download PDF</a>
+</div>
+
+<header>
+  <h1>Robot data collection: operator controls</h1>
+  <p>Two arms · Meta Quest 3 · operator stands behind the arms</p>
+</header>
+
+<div class="grid">
+  <section class="wide">
+    <h2>Headset controllers</h2>
+    <div class="controller">
+      <div>
+        <h3>Left controller → left arm</h3>
+        <p><kbd>Grip</kbd> hold to drive the left arm; let go and it stays where it is</p>
+        <p><kbd>Trigger</kbd> closes the left gripper (release to open)</p>
+        <p><kbd>X</kbd> hold, both grips released: <b>both arms go home</b>. Keep holding until the headset shows
+          "at home", then release.</p>
+      </div>
+      <div>
+        <h3>Right controller → right arm</h3>
+        <p><kbd>Grip</kbd> hold to drive the right arm; let go and it stays where it is</p>
+        <p><kbd>Trigger</kbd> closes the right gripper (release to open)</p>
+        <p><kbd>A</kbd> start recording an episode · <kbd>A</kbd> again to stop (both grips released)</p>
+        <p>Right after stopping: <kbd>A</kbd> = success, <kbd>B</kbd> = failure (6 s to answer)</p>
+        <p><kbd>B</kbd> at other times: next camera view in the headset</p>
+      </div>
+    </div>
+    <p class="note" style="margin:5px 0 0">To reach further: let go of the grip, bring your hand back, grip again
+      (the arm follows hand movement, not hand position).</p>
+  </section>
+
+  <section class="wide facing">
+    <h2>Stand behind the arms before you press Enter Passthrough</h2>
+    <p>The direction you face at that moment becomes "forward" for the whole session. Stand behind the arms and look
+      straight ahead, the same way the arms point. If you enter while standing beside the arms (for example facing
+      them at 90&deg;), every move is turned: pushing your hand forward moves the arm sideways.
+      <b>If moves feel turned:</b> release both grips, Exit VR, stand behind the arms, Enter Passthrough again.</p>
+  </section>
+
+  <section>
+    <h2>Start of the day</h2>
+    <ol>
+      <li>Arms resting, nothing in reach: switch the arms on.</li>
+      <li>Open the app: <b>Robot data collection</b> icon (or <span class="msg">localhost:8440</span>).</li>
+      <li>Plug the Quest in by USB. Collect → Headset → <b>Open page in headset</b> (or open
+        <span class="msg">localhost:8443</span> in the Quest browser).</li>
+      <li>Bench → Checks → <b>Read-only arm check</b> (no motion; valid 8 h).</li>
+      <li>Collect → Recording: choose the <b>task</b> and type your <b>name</b>.</li>
+    </ol>
+  </section>
+
+  <section>
+    <h2>Each run</h2>
+    <ol>
+      <li>Collect → Arms → <b>Live</b> → <b>Start arms</b>; tick the checklist (arms at rest, someone at the power
+        switch).</li>
+      <li>Headset page: Input mode <b>Bimanual</b> (set when opened from the app). <b>Behind the arms</b>, press
+        <b>Enter Passthrough</b>. Release both grips: the arms go home.</li>
+      <li><kbd>A</kbd> record → do the task → <kbd>A</kbd> stop → <kbd>A</kbd>/<kbd>B</kbd>.</li>
+      <li>Between episodes: hold <kbd>X</kbd> to bring both arms home.</li>
+      <li><b>Stop arms</b> when done. The arms return to rest. A run also ends by itself at its time limit.</li>
+    </ol>
+  </section>
+
+  <section>
+    <h2>End of the day</h2>
+    <ol>
+      <li><b>Stop arms</b>; switch the arms off once they are at rest.</li>
+      <li>Episodes → <b>Run checks</b> on the day's session.</li>
+      <li>Accept or reject each episode (look at the preview and the verdict).</li>
+      <li>Jobs → name the dataset → <b>Start export</b>.</li>
+    </ol>
+    <p class="note" style="margin:4px 0 0">Never run checks or exports while recording or while the arms run.</p>
+  </section>
+
+  <section>
+    <h2>When the arms hold still</h2>
+    <table>
+      <tr><td>Grip released</td><td>Normal: that arm waits. Grip again to continue.</td></tr>
+      <tr><td>Arms too close</td><td>Move the hands apart; the arms continue.</td></tr>
+      <tr><td>Gripper at the table</td><td>Lift the hand slightly; the arm continues.</td></tr>
+      <tr><td>Tracking lost</td><td>Look at your hands so the headset sees both controllers.</td></tr>
+    </table>
+  </section>
+
+  <section class="wide stop">
+    <h2>Safety</h2>
+    <ul>
+      <li><b>The arm power switch is the emergency stop.</b> Someone stands at it whenever the arms run.</li>
+      <li><b>Stop arms</b> (red, top of the app) brings both arms back to rest. Press it once and wait.</li>
+      <li><span class="msg">SAFETY STOP</span>: the program stopped the run and returns the arms to rest by itself.
+        Wait until they are at rest, then start a new run.</li>
+      <li><span class="msg">CUT ARM POWER NOW</span>: switch the arms off at the power switch, then tell the person in
+        charge.</li>
+      <li>Keep hands, faces and objects out of the arms' reach while they move. Never clear arm errors yourself.</li>
+    </ul>
+  </section>
+</div>
+
+<script>
+  // Inside the app's Controls tab the app has its own Print / PDF buttons.
+  if (window.self !== window.top) document.querySelector(".toolbar").style.display = "none";
+</script>
+
+<footer><span>Quest data collection · operator card</span><span>Details: docs/setup.md</span></footer>
+</body>
+</html>

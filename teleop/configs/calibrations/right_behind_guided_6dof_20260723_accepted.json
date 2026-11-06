@@ -1,0 +1,148 @@
+{
+  "name": "right_behind_guided_6dof_20260723_accepted",
+  "position_matrix": [
+    [
+      0.06751099338877033,
+      0.06855319796897152,
+      -0.995360600395599
+    ],
+    [
+      0.997425673136004,
+      -0.02880747262086301,
+      0.06566700914757254
+    ],
+    [
+      0.024172139765658438,
+      0.99723146188306,
+      0.070321540723481
+    ]
+  ],
+  "rotation_matrix": [
+    [
+      0.06751099338877033,
+      0.06855319796897152,
+      -0.995360600395599
+    ],
+    [
+      0.997425673136004,
+      -0.02880747262086301,
+      0.06566700914757254
+    ],
+    [
+      0.024172139765658438,
+      0.99723146188306,
+      0.070321540723481
+    ]
+  ],
+  "orientation_delta_mode": "matrix_conjugate",
+  "task_rotation_signs": [
+    1.0,
+    1.0,
+    1.0
+  ],
+  "vectors_are_columns": true,
+  "quaternion_convention": "wxyz",
+  "quest_input": {
+    "hand": "right",
+    "mapping_mode": "mirror"
+  },
+  "task_mapping_semantics": {
+    "name": "behind",
+    "behavior": "native_parallel",
+    "mirror_semantics_validated": false,
+    "explanation": "The page and transport reported Mirror, but this task frame cancels the transport reflection. The operator observed and accepted Behind/native-parallel behavior."
+  },
+  "physical_axis_acceptance": {
+    "status": "accepted_by_operator",
+    "date": "2026-07-23",
+    "source_calibration": "configs/calibrations/right_real_guided_6dof_20260723_candidate.json",
+    "working_calibration": "configs/calibrations/right_mirror_physical_axis_validation_20260723_working.json",
+    "supersedes_mislabeled_calibration": "configs/calibrations/right_mirror_guided_6dof_20260723_accepted.json",
+    "operator_report": "All six motions and mapping were perfect for Behind/real native-parallel motion; this was not mirrored behavior.",
+    "scope": {
+      "controller": "right",
+      "page_mapping_mode": "mirror",
+      "task_mapping_semantics": "behind",
+      "translation_scale": 0.2,
+      "rotation_scale": 0.2,
+      "position_reach_limit_m": 0.035,
+      "rotation_reach_limit_rad": 0.08,
+      "gripper_commanded": false
+    },
+    "derivation": {
+      "webxr_sagittal_reflection": [
+        [
+          -1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "formula": "behind_task_frame = right_real_task_frame @ webxr_sagittal_reflection",
+      "task_frame_determinant": -1.0,
+      "net_effect": "The task frame cancels the page-level reflection, reproducing the native-parallel Behind behavior of the captured Right/Real frame."
+    },
+    "motions": {
+      "right_left_translation": "passed",
+      "up_down_translation": "passed",
+      "forward_backward_translation": "passed",
+      "screw_rotation": "passed",
+      "nod_yes_rotation": "passed",
+      "nod_no_rotation": "passed"
+    },
+    "telemetry": {
+      "run_count": 6,
+      "total_rows": 8099,
+      "total_ik_failures": 0,
+      "runs": [
+        {
+          "path": "runs/2026-07-23/20260723-155250_right-mirror-axis-01-right",
+          "rows": 1350,
+          "ik_failures": 0
+        },
+        {
+          "path": "runs/2026-07-23/20260723-155315_right-mirror-axis-01-right",
+          "rows": 1349,
+          "ik_failures": 0
+        },
+        {
+          "path": "runs/2026-07-23/20260723-155338_right-mirror-axis-01-right",
+          "rows": 1350,
+          "ik_failures": 0
+        },
+        {
+          "path": "runs/2026-07-23/20260723-155400_right-mirror-axis-01-right",
+          "rows": 1350,
+          "ik_failures": 0
+        },
+        {
+          "path": "runs/2026-07-23/20260723-155427_right-mirror-axis-01-right",
+          "rows": 1350,
+          "ik_failures": 0
+        },
+        {
+          "path": "runs/2026-07-23/20260723-155505_right-mirror-axis-01-right",
+          "rows": 1350,
+          "ik_failures": 0
+        }
+      ]
+    },
+    "stable_left_baseline_unchanged": true,
+    "promotion_limits": [
+      "Acceptance applies to Behind/native-parallel task behavior at the recorded reduced gains and reach limits.",
+      "The browser page must still report Right/Mirror to reproduce the tested transport input.",
+      "True mirrored task behavior was not validated.",
+      "The gripper was not commanded during this acceptance.",
+      "Higher gains, larger reach, gripper control, or another input mode require separate validation."
+    ]
+  }
+}

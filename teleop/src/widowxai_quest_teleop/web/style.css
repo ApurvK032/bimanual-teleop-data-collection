@@ -1,0 +1,53 @@
+:root { color-scheme: dark; font-family: Inter, ui-sans-serif, system-ui, sans-serif; background: #08111f; color: #e7eef8; }
+* { box-sizing: border-box; }
+body { margin: 0; min-height: 100vh; display: grid; place-items: start center; padding: 32px 0; background: radial-gradient(circle at top, #173152, #08111f 60%); }
+main { width: min(680px, calc(100% - 32px)); padding: 36px; background: rgba(10, 22, 39, .88); border: 1px solid #294563; border-radius: 22px; box-shadow: 0 24px 80px #0008; }
+.eyebrow { color: #6ed1ff; font-weight: 800; letter-spacing: .18em; font-size: .75rem; }
+h1 { font-size: clamp(2rem, 8vw, 4rem); line-height: .95; margin: 10px 0 18px; }
+p { color: #afc0d6; line-height: 1.55; }
+.status { display: flex; align-items: center; gap: 10px; margin: 24px 0; font-weight: 700; }
+#dot { width: 10px; height: 10px; border-radius: 50%; background: #f5a524; box-shadow: 0 0 14px currentColor; }
+#dot.ok { background: #32d583; }
+.actions { display: flex; gap: 12px; }
+button { border: 0; border-radius: 12px; padding: 14px 22px; font: inherit; font-weight: 800; background: #53c5ff; color: #06111c; }
+button.secondary { background: #223b56; color: #e7eef8; }
+button.compact { padding: 10px 14px; font-size: .82rem; }
+button:disabled { opacity: .42; }
+.input-settings { margin: 24px 0; padding: 18px; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; border: 1px solid #294563; border-radius: 16px; background: #0d1b2d; }
+.input-settings > div, .selection-summary { grid-column: 1 / -1; }
+.section-title { margin: 0; color: #e7eef8; font-weight: 800; }
+.field-help, .selection-summary { margin: 4px 0 0; font-size: .88rem; }
+.selection-summary { color: #6ed1ff; }
+.camera-settings { margin: 24px 0; padding: 18px; border: 1px solid #294563; border-radius: 16px; background: #0d1b2d; }
+.camera-heading { display: flex; align-items: end; justify-content: space-between; gap: 16px; margin-bottom: 14px; }
+.camera-role-settings { display: grid; gap: 10px; }
+.camera-role-row { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: end; gap: 12px; padding: 12px; border: 1px solid #294563; border-radius: 12px; background: #101f33; }
+.camera-enabled-toggle { display: flex; align-items: center; gap: 8px; min-height: 43px; white-space: nowrap; }
+.camera-enabled-toggle input { width: 18px; height: 18px; accent-color: #53c5ff; }
+.camera-setup-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 12px; }
+.camera-previews { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; margin-top: 14px; }
+.camera-previews figure { margin: 0; overflow: hidden; border: 1px solid #385877; border-radius: 12px; background: #08111f; }
+.camera-previews figure[hidden] { display: none; }
+.camera-previews canvas { display: block; width: 100%; aspect-ratio: 4 / 3; background: #08111f; }
+.camera-previews figcaption { padding: 8px 10px; color: #afc0d6; font-size: .78rem; font-weight: 700; }
+.camera-status { margin: 13px 0 0; color: #f5bf72; font-size: .84rem; font-weight: 700; }
+.camera-status.ok { color: #6ee7a3; }
+label { display: grid; gap: 7px; color: #afc0d6; font-size: .82rem; font-weight: 700; }
+select { width: 100%; border: 1px solid #385877; border-radius: 10px; padding: 12px; font: inherit; color: #e7eef8; background: #152a43; }
+select:disabled { opacity: .52; }
+#apply-input { align-self: end; }
+dl { margin: 28px 0; display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+dl div { padding: 14px; border-radius: 12px; background: #101f33; }
+dt { color: #8196b0; font-size: .78rem; }
+dd { margin: 5px 0 0; font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
+.warning { border-left: 3px solid #f5a524; padding-left: 14px; }
+#xr-canvas { display: none; }
+@media (max-width: 560px) {
+  main { padding: 24px; }
+  .actions { flex-direction: column; }
+  .input-settings, dl, .camera-previews { grid-template-columns: 1fr; }
+  .input-settings > div, .selection-summary { grid-column: 1; }
+  .camera-heading { align-items: stretch; flex-direction: column; }
+  .camera-role-row { grid-template-columns: 1fr; align-items: stretch; }
+  .camera-enabled-toggle { min-height: auto; }
+}

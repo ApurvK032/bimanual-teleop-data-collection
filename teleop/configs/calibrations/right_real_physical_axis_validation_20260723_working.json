@@ -1,0 +1,121 @@
+{
+  "name": "right_real_physical_axis_validation_20260723_working",
+  "position_matrix": [
+    [
+      -0.06751099338877033,
+      0.06855319796897152,
+      -0.995360600395599
+    ],
+    [
+      -0.997425673136004,
+      -0.02880747262086301,
+      0.06566700914757254
+    ],
+    [
+      -0.024172139765658438,
+      0.99723146188306,
+      0.070321540723481
+    ]
+  ],
+  "rotation_matrix": [
+    [
+      -0.06751099338877033,
+      0.06855319796897152,
+      -0.995360600395599
+    ],
+    [
+      -0.997425673136004,
+      -0.02880747262086301,
+      0.06566700914757254
+    ],
+    [
+      -0.024172139765658438,
+      0.99723146188306,
+      0.070321540723481
+    ]
+  ],
+  "orientation_delta_mode": "matrix_conjugate",
+  "task_rotation_signs": [
+    1.0,
+    1.0,
+    1.0
+  ],
+  "vectors_are_columns": true,
+  "quaternion_convention": "wxyz",
+  "quest_input": {
+    "hand": "right",
+    "mapping_mode": "real"
+  },
+  "physical_axis_validation": {
+    "status": "pending_not_accepted",
+    "source_calibration": "configs/calibrations/right_real_guided_6dof_20260723_candidate.json",
+    "stable_left_baseline_unchanged": true,
+    "notes": [
+      "This working file is not an accepted hardware calibration.",
+      "The initial matrices exactly preserve the original guided right/real fit.",
+      "Update only from isolated signed-motion observations; validate every revision in MuJoCo before another physical run."
+    ],
+    "motions": {
+      "right": {
+        "kind": "translation",
+        "expected_robot_axis": [
+          0.0,
+          -1.0,
+          0.0
+        ],
+        "status": "pending",
+        "physical_observation": null
+      },
+      "up": {
+        "kind": "translation",
+        "expected_robot_axis": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "status": "pending",
+        "physical_observation": null
+      },
+      "forward": {
+        "kind": "translation",
+        "expected_robot_axis": [
+          1.0,
+          0.0,
+          0.0
+        ],
+        "status": "pending",
+        "physical_observation": null
+      },
+      "screw_clockwise": {
+        "kind": "rotation",
+        "expected_robot_axis": [
+          1.0,
+          0.0,
+          0.0
+        ],
+        "status": "pending",
+        "physical_observation": null
+      },
+      "nod_yes_down": {
+        "kind": "rotation",
+        "expected_robot_axis": [
+          0.0,
+          1.0,
+          0.0
+        ],
+        "status": "pending",
+        "physical_observation": null
+      },
+      "nod_no_left": {
+        "kind": "rotation",
+        "expected_robot_axis": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "status": "pending",
+        "physical_observation": null
+      }
+    }
+  }
+}

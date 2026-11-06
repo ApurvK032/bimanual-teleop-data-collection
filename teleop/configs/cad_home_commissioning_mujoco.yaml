@@ -1,0 +1,54 @@
+project:
+  name: widowxai-cad-rest-commissioning-mujoco
+  mode: cad_joint_relative_mujoco_only
+
+model:
+  xml_path: third_party/trossen_arm_mujoco/trossen_arm_mujoco/assets/wxai/wxai_follower.xml
+  # The visual commissioning scene starts and ends at the printed leader's
+  # all-zero rest pose. The filename is retained for command compatibility.
+  # Physical hardware still uses its separate guarded rest -> home lifecycle.
+  rest_q_rad: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+  gripper_preview_m: 0.0
+
+cad:
+  udp_host: 127.0.0.1
+  udp_port: 5055
+  expected_names: [link1_link, link2_link, link3_link, link4_link, link5_link]
+  require_root_locked: true
+  stale_timeout_s: 0.100
+  fresh_samples_to_recover: 3
+  max_packet_age_s: 0.100
+  max_future_skew_s: 0.050
+  max_source_step_rad: [0.12, 0.12, 0.12, 0.12, 0.12]
+  signs: [1.0, 1.0, -1.0, -1.0, -1.0]
+  scales: [0.10, 0.10, 0.10, 0.10, 0.10]
+  source_deadband_rad: [0.15, 0.02, 0.01, 0.025, 0.15]
+  source_filter:
+    enabled: true
+    minimum_cutoff_hz: 2.0
+    speed_coefficient: 4.0
+    derivative_cutoff_hz: 2.0
+    maximum_cutoff_hz: 20.0
+
+commissioning:
+  minimum_delta_rad: [-0.0349065850, -0.0349065850, -0.0349065850, -0.0349065850, -0.0349065850, -0.000001]
+  maximum_delta_rad: [0.0349065850, 0.0349065850, 0.0349065850, 0.0349065850, 0.0349065850, 0.000001]
+  max_command_step_rad: [0.003, 0.003, 0.003, 0.003, 0.003, 0.000002]
+  return_to_rest_timeout_s: 3.0
+
+control:
+  loop_rate_hz: 90
+  joint_command_limits:
+    enabled: true
+    max_velocity: [0.10, 0.10, 0.10, 0.10, 0.10, 0.0001]
+    max_acceleration: [0.50, 0.50, 0.50, 0.50, 0.50, 0.001]
+
+telemetry:
+  output_dir: runs
+
+hardware:
+  enabled: false
+  live_output_implemented: false
+  control_gripper: false
+  start_at_rest: true
+  return_to_rest_on_exit: true

@@ -1,0 +1,92 @@
+{
+  "name": "right_real_guided_6dof_20260723_independent_rotation_candidate",
+  "position_matrix": [
+    [
+      -0.06751099338877033,
+      0.06855319796897152,
+      -0.995360600395599
+    ],
+    [
+      -0.997425673136004,
+      -0.02880747262086301,
+      0.06566700914757254
+    ],
+    [
+      -0.024172139765658438,
+      0.99723146188306,
+      0.070321540723481
+    ]
+  ],
+  "rotation_matrix": [
+    [
+      -0.08224266731312421,
+      -0.05637596292185875,
+      -0.9950165297510669
+    ],
+    [
+      -0.9932050840858141,
+      0.087123528081718,
+      0.07715667048729667
+    ],
+    [
+      0.0823395689769744,
+      0.9946010464800582,
+      -0.06315816432939349
+    ]
+  ],
+  "orientation_delta_mode": "matrix_conjugate",
+  "task_rotation_signs": [
+    1.0,
+    1.0,
+    1.0
+  ],
+  "vectors_are_columns": true,
+  "quaternion_convention": "wxyz",
+  "quest_input": {
+    "hand": "right",
+    "mapping_mode": "real"
+  },
+  "guided_calibration": {
+    "rotation_frame_linked_to_position": false,
+    "source_calibration": "configs/calibrations/right_real_guided_6dof_20260723_candidate.json",
+    "reason": "MuJoCo validation found nod-yes coupled into screw with the translation-linked rotation frame. Position mapping is unchanged; rotation is refit from all six captured rotation gestures.",
+    "position_quality": {
+      "sample_count": 6,
+      "median_axis_error_deg": 4.865850808983452,
+      "max_axis_error_deg": 5.824214129548395,
+      "minimum_alignment": 0.9948379119479576,
+      "axis_errors_deg": [
+        4.937375970555976,
+        5.675222094488744,
+        4.513209826262727,
+        4.794325647410927,
+        5.824214129548395,
+        2.3822376911835947
+      ],
+      "excitation_singular_values": [
+        1.5130969093274609,
+        1.4666587996978233,
+        1.2487792872451995
+      ]
+    },
+    "rotation_quality": {
+      "sample_count": 6,
+      "median_axis_error_deg": 6.38246713558828,
+      "max_axis_error_deg": 9.26525667021289,
+      "minimum_alignment": 0.986953529179241,
+      "axis_errors_deg": [
+        9.26525667021289,
+        4.992601736256388,
+        1.1951076721845688,
+        5.753821078162027,
+        7.011113193014533,
+        7.794380719565751
+      ],
+      "excitation_singular_values": [
+        1.5808785339187825,
+        1.3914324741522226,
+        1.2508951718147383
+      ]
+    }
+  }
+}

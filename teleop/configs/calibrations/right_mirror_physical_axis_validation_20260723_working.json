@@ -1,0 +1,150 @@
+{
+  "name": "right_mirror_physical_axis_validation_20260723_working",
+  "position_matrix": [
+    [
+      0.06751099338877033,
+      0.06855319796897152,
+      -0.995360600395599
+    ],
+    [
+      0.997425673136004,
+      -0.02880747262086301,
+      0.06566700914757254
+    ],
+    [
+      0.024172139765658438,
+      0.99723146188306,
+      0.070321540723481
+    ]
+  ],
+  "rotation_matrix": [
+    [
+      0.06751099338877033,
+      0.06855319796897152,
+      -0.995360600395599
+    ],
+    [
+      0.997425673136004,
+      -0.02880747262086301,
+      0.06566700914757254
+    ],
+    [
+      0.024172139765658438,
+      0.99723146188306,
+      0.070321540723481
+    ]
+  ],
+  "orientation_delta_mode": "matrix_conjugate",
+  "task_rotation_signs": [
+    1.0,
+    1.0,
+    1.0
+  ],
+  "vectors_are_columns": true,
+  "quaternion_convention": "wxyz",
+  "quest_input": {
+    "hand": "right",
+    "mapping_mode": "mirror"
+  },
+  "physical_axis_validation": {
+    "status": "pending_not_accepted",
+    "source_calibration": "configs/calibrations/right_real_guided_6dof_20260723_candidate.json",
+    "derivation": {
+      "webxr_sagittal_reflection": [
+        [
+          -1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "formula": "right_mirror_task_frame = right_real_task_frame @ webxr_sagittal_reflection",
+      "task_frame_determinant": -1.0,
+      "reason": "The relay reflects position as S*p and orientation as S*R*S. Using F=Q*S for both position and matrix conjugation makes the mirrored stream algebraically equivalent to the captured right/real task frame Q."
+    },
+    "stable_left_baseline_unchanged": true,
+    "notes": [
+      "This working file is not an accepted hardware calibration.",
+      "The initial frame is an exact algebraic conversion of the original guided right/real fit, not a guessed axis swap.",
+      "Update only from isolated signed-motion observations; validate every revision in MuJoCo before another physical run."
+    ],
+    "motions": {
+      "right": {
+        "kind": "translation",
+        "expected_robot_axis": [
+          0.0,
+          -1.0,
+          0.0
+        ],
+        "status": "passed",
+        "physical_observation": {
+          "date": "2026-07-23",
+          "run": "runs/2026-07-23/20260723-155505_right-mirror-axis-01-right",
+          "operator_report": "Motion is perfectly working for behind/real native motion.",
+          "interpretation": "Expected right/left translation passed; no unintended rotation was reported.",
+          "telemetry_rows": 1350,
+          "ik_failures": 0
+        }
+      },
+      "up": {
+        "kind": "translation",
+        "expected_robot_axis": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "status": "pending",
+        "physical_observation": null
+      },
+      "forward": {
+        "kind": "translation",
+        "expected_robot_axis": [
+          1.0,
+          0.0,
+          0.0
+        ],
+        "status": "pending",
+        "physical_observation": null
+      },
+      "screw_clockwise": {
+        "kind": "rotation",
+        "expected_robot_axis": [
+          1.0,
+          0.0,
+          0.0
+        ],
+        "status": "pending",
+        "physical_observation": null
+      },
+      "nod_yes_down": {
+        "kind": "rotation",
+        "expected_robot_axis": [
+          0.0,
+          1.0,
+          0.0
+        ],
+        "status": "pending",
+        "physical_observation": null
+      },
+      "nod_no_left": {
+        "kind": "rotation",
+        "expected_robot_axis": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "status": "pending",
+        "physical_observation": null
+      }
+    }
+  }
+}

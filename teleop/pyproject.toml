@@ -1,0 +1,44 @@
+[build-system]
+requires = ["setuptools>=75"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "widowxai-quest-teleop"
+version = "0.1.0"
+description = "Simulation-first Meta Quest 3 teleoperation for the Trossen WidowXAI"
+readme = "README.md"
+requires-python = ">=3.10"
+license = {text = "MIT"}
+dependencies = [
+  "fastapi>=0.116,<1",
+  "mujoco==3.8.1",
+  "numpy>=2.2,<3",
+  "pyyaml>=6.0,<7",
+  "uvicorn[standard]>=0.35,<1",
+  "websockets>=15,<17",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8.4,<10"]
+# Both lab arms were flashed from controller firmware 1.8.3 to 1.9.4 on
+# 2026-10-20. The driver major.minor must match the firmware, so the CPython 3.10
+# hardware environment (.venv-arm19) uses driver 1.9.3, the newest 1.9 release.
+hardware = ["trossen-arm==1.9.3; platform_system != 'Windows'"]
+placo = ["placo>=0.9.23,<1"]
+
+[project.scripts]
+widowxai-quest-relay = "widowxai_quest_teleop.relay:main"
+widowxai-camera-service = "widowxai_quest_teleop.camera_service:main"
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+widowxai_quest_teleop = ["web/*.html", "web/*.js", "web/*.css"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-ra"

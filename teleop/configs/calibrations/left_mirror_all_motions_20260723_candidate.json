@@ -1,0 +1,40 @@
+{
+  "name": "left_mirror_all_motions_20260723_candidate",
+  "position_matrix": [
+    [-0.07091285521275321, -0.0436741823148567, -0.996525931807449],
+    [0.9964499169302966, -0.04854799288142001, -0.06877976037171324],
+    [0.04537543404949181, 0.9978655511572261, -0.04696181212970768]
+  ],
+  "rotation_matrix": [
+    [-0.07091285521275321, -0.0436741823148567, -0.996525931807449],
+    [0.9964499169302966, -0.04854799288142001, -0.06877976037171324],
+    [0.04537543404949181, 0.9978655511572261, -0.04696181212970768]
+  ],
+  "task_position_signs": [-1.0, -1.0, 1.0],
+  "task_rotation_signs": [-1.0, 1.0, -1.0],
+  "orientation_delta_mode": "matrix_conjugate",
+  "vectors_are_columns": true,
+  "quaternion_convention": "wxyz",
+  "quest_input": {
+    "hand": "left",
+    "mapping_mode": "mirror"
+  },
+  "task_mapping_semantics": {
+    "name": "mirror",
+    "definition": "operator_defined_mirrored_motion",
+    "status": "candidate_pending_physical_validation",
+    "behind_source": "configs/calibrations/left_behind_all_motions_20260723_candidate.json",
+    "flip_rule": {
+      "translation": {
+        "left_right": "flipped",
+        "up_down": "unchanged",
+        "forward_backward": "flipped"
+      },
+      "rotation": {
+        "screw": "flipped",
+        "nod_yes": "unchanged",
+        "nod_no": "flipped"
+      }
+    }
+  }
+}

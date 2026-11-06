@@ -1,0 +1,41 @@
+# Local data, bench details and generated files: never published.
+/data/
+/samples/
+/external/
+/state/
+/calibration/
+/configs/rig.yaml
+/configs/rig.yaml.bak-*
+/configs/local/
+/CLAUDE.md
+/CLAUDE.local.md
+.claude/
+
+# Environments and caches
+.venv*/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+*.egg-info/
+build/
+dist/
+
+# Media and arrays only live under docs/media/
+*.mkv
+*.mp4
+*.gif
+*.png
+*.jpg
+*.jpeg
+*.npy
+*.npz
+!/docs/media/**
+nohup.out
+*.log
+
+# Local development tools and notes (not part of the pipeline)
+/dev-tools/
+
+# Private planning notes
+/docs-private/

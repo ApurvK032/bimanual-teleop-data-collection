@@ -1,0 +1,191 @@
+# Dual-arm bimanual profile: two WidowXAI arms, both Quest controllers.
+#
+# STATUS: both Behind mappings are physically accepted at 0.40. At the owner's
+# request, translation and rotation response are staged at 0.60 below for the
+# marker-separation benchmark. Bounded collision recovery remains active. The
+# physically unstable measured-feedback load-yield experiment is removed. The
+# reach, collision, tracking, joint, stale-stream, and shutdown limits are
+# unchanged. Live output still requires explicit current authorization, the
+# dual live token, and every independent safety gate.
+#
+# BASE GEOMETRY MEASURED 2026-08-12. In a shared frame whose origin is midway
+# between the bases, +X points forward, +Y points toward the left arm, and +Z
+# points up: the bases are exactly 500 mm apart, with no X/Z offset, equal
+# height, parallel forward axes, and no relative yaw. Both base centers are
+# 50.8 mm (2 in) forward of the table's rear edge. Overall table dimensions
+# remain separate simulation assumptions.
+project:
+  name: widowxai-quest-teleop
+  mode: dual_widowxai
+
+quest:
+  mode: bimanual
+  websocket_url: ws://127.0.0.1:8443/ws
+  prepare_tabletop_tracking_via_adb: true
+  stale_timeout_s: 0.100
+  fresh_samples_to_recover: 3
+
+model:
+  xml_path: third_party/trossen_arm_mujoco/trossen_arm_mujoco/assets/wxai/wxai_follower.xml
+  end_effector_site: ee_site
+  wrist_anchor_site: wrist_anchor
+  simulation_start_q_rad: [0.0, 1.0471975512, 1.3089969390, -1.0471975512, 0.0, 0.0]
+
+arms:
+  # Left Quest controller drives the left arm. Behind / Parallel: matched
+  # motion per side. Mirroring is a single-arm operator-view convention and is
+  # deliberately NOT applied globally across both arms.
+  left:
+    controller_hand: left
+    mapping_mode: real
+    # Verified on hardware 2026-07-27: .2 is the arm on the operator's LEFT when
+    # standing behind. The earlier assignment was a guess and drove each
+    # controller to the opposite arm.
+    robot_ip: 192.168.1.2
+    calibration: configs/calibrations/left_behind_all_motions_20260812_accepted.json
+    base_transform:
+      # MEASURED: +250 mm across from the shared midpoint (500 mm total).
+      measurement_status: measured
+      position_m: [0.0, 0.25, 0.0]
+      quaternion_wxyz: [1.0, 0.0, 0.0, 0.0]
+    # Mapping accepted at 0.40 on 2026-08-12. Translation and rotation response
+    # are 0.60 for the owner-requested marker benchmark. The response remains
+    # unvalidated for general use.
+    # The left gripper was not commanded in the acceptance run.
+    translation_scale: 0.60
+    rotation_scale: 0.60
+    position_reach_limit_m: 0.070
+    rotation_reach_limit_rad: 0.16
+
+  right:
+    controller_hand: right
+    mapping_mode: real
+    robot_ip: 192.168.1.3
+    calibration: configs/calibrations/right_behind_all_motions_20260812_accepted.json
+    base_transform:
+      # MEASURED: -250 mm across from the shared midpoint (500 mm total).
+      measurement_status: measured
+      position_m: [0.0, -0.25, 0.0]
+      quaternion_wxyz: [1.0, 0.0, 0.0, 0.0]
+    # Mapping and gripper accepted at 0.40 on 2026-08-12. Translation and
+    # rotation response are 0.60 for the owner-requested marker benchmark. The
+    # response remains unvalidated for general use. Reach and every hard safety
+    # limit remain at the accepted values.
+    translation_scale: 0.60
+    rotation_scale: 0.60
+    position_reach_limit_m: 0.070
+    rotation_reach_limit_rad: 0.16
+
+safety:
+  # One combined MuJoCo scene screens every commanded tick. Two independent
+  # single-arm models cannot see each other, so this must stay enabled.
+  cross_arm_collision: true
+  # A fault on either arm holds both arms rather than leaving one live.
+  coordinated_fault_hold: true
+  # Reject a commanded state whose closest left-to-right geometry pair is
+  # nearer than this, instead of waiting for actual contact.
+  cross_arm_clearance_m: 0.030
+  # After a collision rejection, catch up through bounded commands instead of
+  # accepting a far-ahead controller target in one tick.
+  collision_recovery_max_joint_delta_rad: [0.010, 0.010, 0.010, 0.010, 0.010, 0.010]
+  collision_recovery_max_gripper_delta_m: 0.001
+  # Maximum acceptable measured gap between the two arms' driver sends. This
+  # is recorded and enforced, never assumed from single-loop ordering.
+  max_command_skew_s: 0.010
+
+# Dormant unless scripts/run_dual_sim.py is launched with --jerk-stress.
+# These values intentionally reconstruct the measured-feedback controller that
+# shook both physical arms on 2026-08-14. No hardware launcher reads this
+# block, and it must never become a live-output option.
+simulation_jerk_stress:
+  simulation_only: true
+  feedback_rate_hz: 50
+  feedback_tracking_delay_s: 0.025
+  command_delay_s: 0.035
+  response_time_constant_s: 0.030
+  load_error_threshold_rad: 0.045
+  load_error_consecutive_samples: 3
+  load_yield_max_joint_delta_rad: 0.006
+  grip_threshold: 0.65
+
+control:
+  command_path: limited_interpolated
+  update_mode: quest_synchronized
+  loop_rate_hz: 90
+  minimum_command_interval_s: 0.008
+  command_spacing_stage: before_send
+  pose_filter_alpha: 0.8
+  pose_filter_translation_alpha: 0.8
+  pose_filter_rotation_alpha: 0.8
+  adaptive_rotation_filter:
+    enabled: true
+    minimum_cutoff_hz: 1.5
+    speed_coefficient: 20.0
+    speed_exponent: 2.0
+    derivative_cutoff_hz: 2.0
+    maximum_cutoff_hz: 35.0
+  joint_command_limits:
+    enabled: true
+    max_velocity: [5.4, 5.4, 5.4, 21.6, 21.6, 21.6]
+    max_acceleration: [1000.0, 1000.0, 1000.0, 2000.0, 2000.0, 2000.0]
+    max_jerk: [100000.0, 100000.0, 100000.0, 200000.0, 200000.0, 200000.0]
+  gripper_command_limits:
+    enabled: true
+    max_velocity: [0.120]
+    max_acceleration: [1.200]
+
+ik:
+  backend: decoupled
+  lambda_position: 0.05
+  lambda_position_extra: 0.15
+  position_manipulability_threshold: 0.05
+  rest_bias: 0.02
+  lambda_rotation: 0.05
+  lambda_rotation_extra: 0.40
+  rotation_manipulability_threshold: 0.50
+  orientation_hold_error_rad: 2.20
+  max_dq_per_joint_rad: [0.06, 0.06, 0.06, 0.24, 0.24, 0.24]
+
+hardware:
+  enabled: true
+  require_explicit_enable: true
+  workstation_preflight:
+    enabled: true
+    require_external_power: true
+    required_power_profile: performance
+    expected_robot_source_ip: 192.168.1.10
+    require_direct_route: true
+  control_gripper: true
+  end_effector_profile: legacy_1_8
+  driver_package: trossen-arm
+  driver_version_tested: 1.9.3  # both arms on firmware 1.9.4 since 2026-10-20; hardware re-validation pending
+  command_goal_time_s: 0.025
+  arm_velocity_feedforward:
+    enabled: true
+    filter_alpha: 0.5
+    gain: 0.5
+    max_velocity_rad_s: [1.5, 1.25, 2.75, 2.0, 2.5, 3.0]
+  startup_ramp_duration_s: 2.0
+  startup_ramp_rate_hz: 120
+  startup_max_joint_delta_rad: [0.006, 0.006, 0.006, 0.006, 0.006, 0.006]
+  startup_collision_samples: 501
+  startup_gripper_move_duration_s: 2.0
+  return_to_rest_on_exit: true
+  rest_q_rad: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+  rest_gripper_m: 0.0
+  shutdown_move_duration_s: 2.0
+  # Dual-arm work is unproven; keep an explicit duration cap unlike the
+  # accepted single-arm profile.
+  max_demo_duration_s: 60.0
+  joint_limit_margin_rad: 0.10
+  max_feedback_error_rad: 0.08
+  feedback_tracking_delay_s: 0.025
+  max_gripper_feedback_error_m: 0.003
+  feedback_check_rate_hz: 50
+  gripper_open_m: 0.040
+  gripper_min_demo_m: 0.0
+  max_gripper_delta_m: 0.0020
+
+telemetry:
+  output_dir: runs
+  format: csv

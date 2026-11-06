@@ -1,0 +1,226 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Data collection</title>
+  <link rel="icon" href="/console/icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/console/console.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <img class="logo-img" src="/console/icon.svg" alt="" width="30" height="30">
+      <div>
+        <div class="brand-name">Data collection</div>
+        <div class="brand-sub" id="session-name">connecting…</div>
+      </div>
+    </div>
+    <div class="pills" id="pills" aria-live="polite"></div>
+    <div class="rec-indicator" id="rec-indicator" hidden><span class="rec-dot"></span><span id="rec-time">0:00</span></div>
+    <button type="button" class="stop-arms" id="global-stop" hidden>Stop arms</button>
+  </header>
+
+  <div class="emergency" id="emergency" role="alert" hidden></div>
+  <div class="banner" id="warnings" hidden></div>
+
+  <nav class="tabs" role="tablist">
+    <button role="tab" data-tab="collect" class="active">Collect</button>
+    <button role="tab" data-tab="episodes">Episodes</button>
+    <button role="tab" data-tab="jobs">Jobs <span class="count" id="jobs-count" hidden></span></button>
+    <button role="tab" data-tab="bench">Bench <span class="count attention" id="bench-attention" hidden>!</span></button>
+    <button role="tab" data-tab="system">System</button>
+    <button role="tab" data-tab="controls">Controls</button>
+  </nav>
+
+  <main>
+    <!-- Collect -->
+    <section class="tab-panel active" id="tab-collect">
+      <div class="first-run panel" id="first-run" hidden>
+        <div>
+          <div class="panel-title">Bench not configured</div>
+          <p>Arm addresses, sides and spacing are needed before the arms can be driven. Saved on this PC.</p>
+        </div>
+        <button type="button" id="first-run-go">Configure bench</button>
+      </div>
+      <div class="collect-layout">
+        <div class="views-col">
+          <div class="views" id="views"></div>
+          <div class="no-camera panel" id="no-camera" hidden></div>
+        </div>
+        <div class="side-col">
+          <!-- arms -->
+          <section class="panel card" id="arms-card">
+            <div class="card-head">
+              <h2>Arm control</h2>
+              <div class="segmented" id="run-kind" role="radiogroup" aria-label="Run type">
+                <button type="button" data-kind="live" class="active" title="The real arms move">Live</button>
+                <button type="button" data-kind="sim" title="MuJoCo simulation of this bench: nothing moves">Simulation</button>
+                <button type="button" data-kind="dry" title="The hardware launcher with simulated arms: no arm is contacted">Dry run</button>
+              </div>
+            </div>
+            <div id="arms-body"></div>
+          </section>
+
+          <!-- recording -->
+          <section class="panel card" id="record-card">
+            <div class="card-head"><h2>Recording</h2></div>
+            <label class="field">
+              <span>Task</span>
+              <select id="task-select"></select>
+              <input id="task-custom" type="text" placeholder="Describe the task" hidden>
+            </label>
+            <label class="field">
+              <span>Operator</span>
+              <input id="operator" type="text" placeholder="Your name">
+            </label>
+            <button class="record-button" id="record-button" type="button">Start episode</button>
+            <p class="hint" id="record-hint">Headset: <kbd>A</kbd> on the right controller, both grips released.</p>
+            <div class="outcome" id="outcome" hidden>
+              <div class="outcome-title">Outcome of the last episode</div>
+              <div class="outcome-buttons">
+                <button type="button" data-outcome="success" class="good">Success</button>
+                <button type="button" data-outcome="failure" class="bad">Failure</button>
+                <button type="button" data-outcome="unsure">Unsure</button>
+              </div>
+              <input id="outcome-note" type="text" placeholder="Note (optional)">
+              <button type="button" class="link" id="outcome-save">Save note</button>
+            </div>
+            <div class="last" id="last-episode"></div>
+          </section>
+
+          <!-- headset -->
+          <section class="panel card" id="quest-card">
+            <div class="card-head"><h2>Headset</h2></div>
+            <div id="quest-body"></div>
+          </section>
+        </div>
+      </div>
+    </section>
+
+    <!-- Episodes -->
+    <section class="tab-panel" id="tab-episodes">
+      <div class="episodes-layout">
+        <aside class="panel sessions">
+          <div class="panel-title">Sessions <button class="link" id="sessions-refresh" type="button">Refresh</button></div>
+          <ul id="session-list" class="session-list"></ul>
+        </aside>
+        <div class="panel episodes">
+          <div class="toolbar">
+            <div class="panel-title" id="episodes-title">Episodes</div>
+            <div class="toolbar-actions">
+              <select id="process-depth" title="Also compute depth">
+                <option value="none">No depth</option>
+                <option value="sgbm">+ SGBM depth (CPU)</option>
+                <option value="raft">+ RAFT depth (GPU)</option>
+              </select>
+              <label class="check"><input type="checkbox" id="process-force"> redo</label>
+              <button type="button" id="process-session">Run checks</button>
+            </div>
+          </div>
+          <div class="table-wrap">
+            <table class="episode-table">
+              <thead><tr>
+                <th></th><th>Episode</th><th>Task</th><th>Outcome</th><th>Length</th><th>Drops</th>
+                <th>Sync</th><th>QC</th><th>Review</th><th></th>
+              </tr></thead>
+              <tbody id="episode-rows"><tr><td colspan="10" class="empty">Pick a session.</td></tr></tbody>
+            </table>
+          </div>
+          <div class="detail" id="episode-detail" hidden></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Jobs -->
+    <section class="tab-panel" id="tab-jobs">
+      <div class="jobs-layout">
+        <form class="panel export-form" id="export-form">
+          <div class="panel-title">Export accepted episodes to LeRobot</div>
+          <label class="field"><span>Dataset name</span><input name="repo_id" required placeholder="cloth_bimanual" pattern="[A-Za-z0-9_\-]+"></label>
+          <label class="field"><span>Image size per eye</span>
+            <select name="image_size">
+              <option value="">Capture size</option>
+              <option value="1280x720">1280 × 720</option>
+              <option value="640x360" selected>640 × 360</option>
+              <option value="320x180">320 × 180</option>
+            </select>
+          </label>
+          <label class="field"><span>Stereo cameras</span>
+            <select name="eyes"><option value="both">Both eyes</option><option value="left">Left eye only</option></select>
+          </label>
+          <fieldset class="field"><legend>Sessions</legend><div id="export-sessions" class="export-sessions"></div></fieldset>
+          <label class="check"><input type="checkbox" name="overwrite"> replace a dataset with this name</label>
+          <button type="submit">Start export</button>
+          <p class="hint">Only accepted episodes are exported. Jobs pause while a recording or an arm run is active.</p>
+        </form>
+        <div class="panel jobs">
+          <div class="panel-title">Jobs</div>
+          <div id="job-list" class="job-list"><p class="empty">No jobs yet.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Bench -->
+    <section class="tab-panel" id="tab-bench">
+      <div class="bench-intro">
+        <h2>Bench configuration</h2>
+        <p class="hint">Layout: arms side by side and parallel at the table edge, operator behind them. Steps are
+          checked as they are completed; settings are stored in configs/local/ on this PC.</p>
+      </div>
+      <div class="steps" id="bench-steps"></div>
+    </section>
+
+    <!-- System -->
+    <section class="tab-panel" id="tab-controls">
+      <div class="controls-bar">
+        <span class="hint">Operator card: what each button does and the order of a session. Print it and keep it at the bench.</span>
+        <span class="controls-actions">
+          <button type="button" class="secondary" id="controls-print">Print</button>
+          <a class="button secondary" href="/console/controls.pdf" target="_blank" rel="noopener">View PDF</a>
+          <a class="button" href="/console/controls.pdf" download="robot-data-collection-controls.pdf">Download PDF</a>
+        </span>
+      </div>
+      <iframe id="controls-frame" class="controls-frame" title="Operator controls" src="/console/controls.html"></iframe>
+    </section>
+
+    <section class="tab-panel" id="tab-system">
+      <div class="system-layout">
+        <div>
+          <div class="panel">
+            <div class="panel-title">Services</div>
+            <div id="services"></div>
+          </div>
+          <div class="panel" style="margin-top:16px">
+            <div class="panel-title">System checks <button class="link" id="doctor-run" type="button">Run again</button></div>
+            <div id="doctor" class="doctor"><p class="hint">Checking…</p></div>
+          </div>
+        </div>
+        <div>
+          <div class="panel">
+            <div class="panel-title">One-time setup</div>
+            <div id="system-setup"><p class="hint">Checking…</p></div>
+          </div>
+          <div class="panel" style="margin-top:16px">
+            <div class="panel-title">Rig settings</div>
+            <div id="setup-info" class="kv"></div>
+          </div>
+          <div class="panel" style="margin-top:16px">
+            <div class="panel-title">Application</div>
+            <p class="hint">Remote access: on the other computer run
+              <code>ssh -N -L 8440:localhost:8440 &lt;this PC&gt;</code>, then open
+              <code>http://localhost:8440/</code>.</p>
+            <div class="toolbar-actions" style="margin-top:12px">
+              <button type="button" class="secondary" id="quit-app">Quit application</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <dialog id="confirm-dialog" class="dialog"></dialog>
+  <div class="toast" id="toast" role="status" hidden></div>
+  <script src="/console/console.js"></script>
+</body>
+</html>

@@ -1,0 +1,75 @@
+{
+  "name": "right_real_guided_6dof_20260723_semantic_axes_candidate",
+  "position_matrix": [
+    [
+      -0.06751099338877033,
+      0.06855319796897152,
+      -0.995360600395599
+    ],
+    [
+      -0.997425673136004,
+      -0.02880747262086301,
+      0.06566700914757254
+    ],
+    [
+      -0.024172139765658438,
+      0.99723146188306,
+      0.070321540723481
+    ]
+  ],
+  "rotation_matrix": [
+    [
+      -0.9932050840858141,
+      0.087123528081718,
+      0.07715667048729667
+    ],
+    [
+      -0.08224266731312421,
+      -0.05637596292185875,
+      -0.9950165297510669
+    ],
+    [
+      -0.0823395689769744,
+      -0.9946010464800582,
+      0.06315816432939349
+    ]
+  ],
+  "orientation_delta_mode": "matrix_conjugate",
+  "task_rotation_signs": [
+    1.0,
+    1.0,
+    -1.0
+  ],
+  "vectors_are_columns": true,
+  "quaternion_convention": "wxyz",
+  "quest_input": {
+    "hand": "right",
+    "mapping_mode": "real"
+  },
+  "guided_calibration": {
+    "rotation_frame_linked_to_position": false,
+    "source_calibration": "configs/calibrations/right_real_guided_6dof_20260723_independent_rotation_candidate.json",
+    "reason": "MuJoCo validation showed controller screw produced robot nod-yes and controller nod-yes produced robot screw. This candidate exchanges only those two rotational task semantics; translation and nod-no are unchanged.",
+    "semantic_axis_mapping": {
+      "controller_screw": "robot_rotation_axis_1",
+      "controller_nod_yes": "robot_rotation_axis_0",
+      "controller_nod_no": "robot_rotation_axis_2"
+    },
+    "rotation_matrix_determinant": 0.9999999999999998,
+    "effective_signed_axis_map_determinant": -0.9999999999999998,
+    "rotation_quality_before_semantic_permutation": {
+      "sample_count": 6,
+      "median_axis_error_deg": 6.38246713558828,
+      "max_axis_error_deg": 9.26525667021289,
+      "minimum_alignment": 0.986953529179241,
+      "axis_errors_deg": [
+        9.26525667021289,
+        4.992601736256388,
+        1.1951076721845688,
+        5.753821078162027,
+        7.011113193014533,
+        7.794380719565751
+      ]
+    }
+  }
+}
